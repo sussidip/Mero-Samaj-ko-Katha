@@ -1,0 +1,783 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mero Samaj ko Katha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;600;700&display=swap">
+<style>
+/* Layout: one long page. Sticky header, scene hero, mission, map+reader, step-by-step story form with poster, FAQ dropdowns, owner card. Dhaka-topi zigzag bands separate the big parts. */
+:root{
+  --bg:#FBF1DA; --surface:#FFF9EA; --surface2:#F4E6C3; --fg:#2A1A12; --muted:#6B5646; --line:#E2CFA3;
+  --red:#B4141E; --onred:#FFF6E6; --blue:#1C3F7A; --gold:#E39B00; --leaf:#2F6B3A; --shadow:rgba(60,30,10,.18);
+  --display:'Yatra One','Mukta',serif; --body:'Mukta','Noto Sans Devanagari',system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1030; --surface:#121A44; --surface2:#1B2660; --fg:#F4EAD0; --muted:#B7B3C9; --line:#2D3A7A;
+  --red:#E5484D; --onred:#fff; --blue:#7FA2F0; --gold:#F5B83D; --leaf:#7CC48A; --shadow:rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1030; --surface:#121A44; --surface2:#1B2660; --fg:#F4EAD0; --muted:#B7B3C9; --line:#2D3A7A;
+  --red:#E5484D; --onred:#fff; --blue:#7FA2F0; --gold:#F5B83D; --leaf:#7CC48A; --shadow:rgba(0,0,0,.5); color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:1.0625rem;line-height:1.65;padding-inline:0;transition:background .4s,color .4s}
+h1,h2,h3,.disp{font-family:var(--display);font-weight:400;line-height:1.2;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.7rem,4.5vw,2.5rem)} h3{font-size:1.3rem}
+p{margin:0}
+a{color:var(--red)}
+:root[data-theme="dark"] a{color:var(--gold)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--red);color:var(--onred);padding:.6rem 1rem;z-index:100;border-radius:6px}
+.skip:focus{left:8px}
+.wrap{max-width:1120px;margin-inline:auto;padding-inline:16px}
+section{padding-block:clamp(2.5rem,7vw,5rem)}
+.kicker{font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);font-weight:700}
+:root[data-theme="dark"] .kicker{color:var(--gold)}
+.dhaka{height:16px;background:
+ linear-gradient(135deg,var(--red) 25%,transparent 25%) -8px 0/16px 16px,
+ linear-gradient(225deg,var(--red) 25%,transparent 25%) -8px 0/16px 16px,
+ linear-gradient(315deg,var(--gold) 25%,transparent 25%) 0 0/16px 16px,
+ linear-gradient(45deg,var(--gold) 25%,transparent 25%) 0 0/16px 16px,var(--blue)}
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:.6rem;min-height:64px;flex-wrap:wrap;padding-block:.4rem}
+.logo{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:var(--fg);margin-right:auto;min-width:0}
+.logo svg{flex:none}
+.logo .l1{font-family:var(--display);font-size:1.45rem;line-height:1;white-space:nowrap}
+.logo .l1 .ne{color:var(--red)} .logo .l1 .en{color:var(--blue)}
+:root[data-theme="dark"] .logo .l1 .ne{color:var(--gold)} :root[data-theme="dark"] .logo .l1 .en{color:var(--fg)}
+.logo small{display:block;font-size:.7rem;color:var(--muted);letter-spacing:.06em;line-height:1.2}
+.tools{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.btn,.chip,.tbtn{font:inherit;cursor:pointer}
+.tbtn{background:var(--surface);color:var(--fg);border:1.5px solid var(--line);border-radius:999px;min-height:40px;min-width:40px;padding:0 .8rem;font-weight:600;font-size:.95rem;display:inline-flex;align-items:center;justify-content:center;gap:.4rem}
+.tbtn:hover{border-color:var(--gold)}
+.tbtn[aria-pressed="true"]{background:var(--blue);color:var(--onred);border-color:var(--blue)}
+:root[data-theme="dark"] .tbtn[aria-pressed="true"]{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+.menu{position:relative}
+.menu ul{display:none;position:absolute;right:0;top:calc(100% + 6px);min-width:220px;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:.4rem;margin:0;list-style:none;box-shadow:0 12px 30px var(--shadow)}
+.menu.open ul{display:block}
+.menu a{display:block;padding:.55rem .8rem;border-radius:6px;text-decoration:none;color:var(--fg);font-weight:600}
+.menu a:hover{background:var(--surface2)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:10px;border:2px solid var(--red);background:var(--red);color:var(--onred);padding:.7rem 1.25rem;font-weight:700;font-size:1rem;text-decoration:none;min-height:46px}
+:root[data-theme="dark"] .btn{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+.btn.ghost{background:transparent;color:var(--red)}
+:root[data-theme="dark"] .btn.ghost{background:transparent;color:var(--gold)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+/* hero */
+.hero{padding-block:0;position:relative;overflow:hidden}
+.scene{position:relative;width:100%;aspect-ratio:2/1;max-height:460px;min-height:230px;background:var(--surface2)}
+.scene svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene .night{display:none}
+:root[data-theme="dark"] .scene .day{display:none}
+:root[data-theme="dark"] .scene .night{display:block}
+.heroText{padding-block:2rem 2.5rem;display:grid;gap:1rem;max-width:760px}
+.heroText h1{font-size:clamp(2rem,6vw,3.6rem)}
+.heroText .sub{font-size:1.15rem;color:var(--muted)}
+.row{display:flex;gap:.8rem;flex-wrap:wrap}
+.stats{display:flex;gap:2rem;flex-wrap:wrap;margin-top:.5rem}
+.stats b{font-family:var(--display);font-size:2rem;font-weight:400;display:block;line-height:1;color:var(--red)}
+:root[data-theme="dark"] .stats b{color:var(--gold)}
+.stats span{font-size:.85rem;color:var(--muted)}
+/* day/night animations */
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes drift{from{transform:translateX(-120px)}to{transform:translateX(920px)}}
+@keyframes sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
+@keyframes bub{0%,15%{opacity:0;transform:translateY(8px) scale(.8)}30%,60%{opacity:1;transform:translateY(0) scale(1)}80%,100%{opacity:0;transform:translateY(-10px) scale(.9)}}
+@keyframes flick{0%,100%{transform:scale(1,1)}33%{transform:scale(.92,1.08)}66%{transform:scale(1.06,.94)}}
+@keyframes rise{0%{opacity:0;transform:translateY(0)}20%{opacity:1}100%{opacity:0;transform:translateY(-230px)}}
+@keyframes shoot{0%,86%{opacity:0;transform:translate(0,0)}88%{opacity:1}100%{opacity:0;transform:translate(-260px,150px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fly{from{transform:translateX(-60px)}to{transform:translateX(900px)}}
+@keyframes ring{0%{r:7;opacity:.9}100%{r:20;opacity:0}}
+.star{animation:tw 3s ease-in-out infinite}
+.cloud{animation:drift 70s linear infinite}
+.tree{transform-origin:400px 300px;animation:sway 6s ease-in-out infinite}
+.rays{transform-origin:640px 90px;animation:spin 60s linear infinite}
+.bubble{animation:bub 7s ease-in-out infinite;opacity:0}
+.flame{transform-origin:400px 332px;animation:flick .5s infinite}
+.spark{animation:rise 5s linear infinite;opacity:0}
+.shooter{animation:shoot 9s linear infinite;opacity:0}
+.bird{animation:fly 28s linear infinite}
+.calm *{animation:none!important}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;scroll-behavior:auto!important}.bubble,.spark{opacity:.8}}
+/* cards, mission */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:2rem}
+.pillar{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:1.3rem}
+.pillar h3{margin-bottom:.4rem;color:var(--red)}
+:root[data-theme="dark"] .pillar h3{color:var(--gold)}
+.lead{font-size:1.25rem;max-width:62ch;margin-top:1rem}
+.mission{background:var(--surface2)}
+/* map */
+.mapgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:1.5rem;margin-top:1.5rem;align-items:start}
+@media(max-width:860px){.mapgrid{grid-template-columns:minmax(0,1fr)}}
+.mapbox{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:.6rem;position:relative}
+.mapbox svg{width:100%;height:auto;display:block}
+.nepal{fill:var(--surface2);stroke:var(--red);stroke-width:2.5;stroke-linejoin:round}
+.dd{fill:var(--muted);opacity:.55;cursor:pointer}
+.dd:hover,.dd:focus{opacity:1;fill:var(--blue)}
+.pin{cursor:pointer}
+.pin .core{fill:var(--gold);stroke:var(--red);stroke-width:2}
+.pin .halo{fill:none;stroke:var(--gold);stroke-width:2;animation:ring 2.4s ease-out infinite}
+.pin[aria-pressed="true"] .core{fill:var(--red);stroke:var(--gold)}
+.maplabel{min-height:1.6em;font-weight:700;padding:.3rem .5rem;color:var(--muted)}
+.note{font-size:.85rem;color:var(--muted)}
+.filters{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1.2rem}
+.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:.25rem .85rem;font-weight:600;font-size:.92rem}
+.chip[aria-pressed="true"]{background:var(--red);color:var(--onred);border-color:var(--red)}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+.list{display:grid;gap:.8rem;max-height:560px;overflow:auto;padding:2px}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:1rem;text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%;display:grid;gap:.3rem}
+.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.card h3{font-size:1.15rem}
+.meta{font-size:.85rem;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;padding:.05rem .55rem;border-radius:999px;background:var(--blue);color:var(--onred);margin-right:.3rem}
+:root[data-theme="dark"] .tag{background:var(--gold);color:#1a1200}
+.tag.sample{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.tag.pend{background:var(--red);color:var(--onred)}
+:root[data-theme="dark"] .tag.pend{background:var(--red);color:#fff}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(5,5,20,.65);z-index:80;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
+.ov[hidden]{display:none!important}
+.modal{background:var(--surface);color:var(--fg);border:2px solid var(--gold);border-radius:16px;max-width:720px;width:100%;margin-block:auto;padding:1.5rem;display:grid;gap:1rem;position:relative}
+.modal .body{white-space:pre-wrap;font-size:1.1rem;line-height:1.85}
+/* form */
+.formwrap{background:var(--surface);border:2px solid var(--line);border-radius:18px;margin-top:1.5rem;overflow:hidden}
+.steps{display:flex;gap:0;justify-content:space-between;padding:1rem 1.2rem;background:var(--surface2);border-bottom:1.5px solid var(--line)}
+.stp{display:grid;justify-items:center;gap:.2rem;flex:1;font-size:.8rem;font-weight:700;color:var(--muted);text-align:center}
+.lamp{width:34px;height:34px;border-radius:50% 50% 45% 45%;border:2px solid var(--line);display:grid;place-items:center;background:var(--bg);font-family:var(--display)}
+.stp.on .lamp{background:var(--gold);border-color:var(--red);color:#1a1200;box-shadow:0 0 16px var(--gold)}
+.stp.on{color:var(--fg)}
+.panel{padding:1.4rem;display:grid;gap:1.1rem}
+.panel[hidden]{display:none}
+label,.lbl{font-weight:700;display:block;margin-bottom:.25rem}
+input[type=text],select,textarea{font:inherit;width:100%;padding:.7rem .85rem;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--fg);min-height:46px}
+textarea{min-height:240px;resize:vertical;line-height:1.7}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.genres{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem}
+.gopt{position:relative}
+.gopt input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.gopt span{display:grid;gap:.1rem;border:2px solid var(--line);border-radius:12px;padding:.7rem;background:var(--bg);font-weight:700;text-align:center;min-height:68px;align-content:center}
+.gopt span small{font-weight:400;color:var(--muted)}
+.gopt input:checked+span{border-color:var(--red);background:var(--surface2);box-shadow:0 0 0 3px var(--gold)}
+.gopt input:focus-visible+span{outline:3px solid var(--gold);outline-offset:2px}
+.opt{display:flex;gap:.7rem;align-items:flex-start;border:2px solid var(--line);border-radius:12px;padding:.8rem;background:var(--bg);cursor:pointer;margin:0;font-weight:400}
+.opt input{margin-top:.4rem;width:20px;height:20px;accent-color:var(--red);flex:none}
+.opt b{display:block}
+.err{color:var(--red);font-weight:700;min-height:1.4em}
+:root[data-theme="dark"] .err{color:#FF8A8E}
+.nav[hidden]{display:none}
+.nav{display:flex;justify-content:space-between;gap:.8rem;flex-wrap:wrap;padding:0 1.4rem 1.4rem}
+.posterbox{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:1.5rem;align-items:start}
+@media(max-width:760px){.posterbox{grid-template-columns:minmax(0,1fr)}}
+canvas#poster{width:100%;height:auto;border-radius:10px;border:2px solid var(--gold);box-shadow:0 14px 34px var(--shadow);background:var(--surface2)}
+.picker{max-width:640px}
+/* FAQ */
+details{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:0 1.1rem}
+details+details{margin-top:.7rem}
+summary{cursor:pointer;font-weight:700;padding:1rem 0;list-style:none;display:flex;justify-content:space-between;gap:1rem;font-size:1.08rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--display);color:var(--red);font-size:1.4rem;line-height:1}
+:root[data-theme="dark"] summary::after{color:var(--gold)}
+details[open] summary::after{content:"–"}
+details p{padding-bottom:1rem;color:var(--muted)}
+/* about */
+.about{background:var(--surface2)}
+.owner{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.5rem;align-items:center;margin-top:1.5rem}
+@media(max-width:600px){.owner{grid-template-columns:minmax(0,1fr)}}
+.avatar{width:120px;height:120px;border-radius:50%;background:var(--blue);color:var(--onred);display:grid;place-items:center;font-family:var(--display);font-size:2.6rem;border:4px solid var(--gold)}
+.phone{font-weight:700;font-size:1.2rem;user-select:all}
+footer{padding-block:2rem 3rem;text-align:center;color:var(--muted);font-size:.92rem}
+footer .disp{color:var(--fg);font-size:1.2rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--blue);color:var(--onred);padding:.8rem 1.2rem;border-radius:10px;z-index:90;max-width:90vw;box-shadow:0 8px 24px var(--shadow)}
+:root[data-theme="dark"] .toast{background:var(--gold);color:#1a1200}
+</style>
+<a class="skip" href="#main" data-t="skip">Skip to content</a>
+<div class="sr" aria-live="polite" id="live"></div>
+<header class="top">
+ <div class="wrap bar">
+  <a class="logo" href="#home" aria-label="मेरो Samaj को कथा">
+   <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3C10 3 3 10 3 19c0 6 3 10 7 13l-1 6 8-4c1 .1 2 .1 3 .1 10 0 18-7 18-16S30 3 20 3z" fill="var(--red)"/><path d="M20 10c3 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-4 3-6 1 1 1 2 2 3 1-3 1-5 1-8z" fill="var(--gold)"/></svg>
+   <span><span class="l1"><span class="ne">मेरो</span> <span class="en">Samaj</span> <span class="ne">को</span> <span class="en">Katha</span></span><small data-t="logoSub">मेरो समाजको कथा · My Society Story</small></span>
+  </a>
+  <div class="tools">
+   <div class="menu" id="menu">
+    <button class="tbtn" id="menuBtn" aria-expanded="false" aria-haspopup="true" aria-controls="menuList"><span data-t="menu">Menu</span> ▾</button>
+    <ul id="menuList">
+     <li><a href="#map" data-t="nMap">Story map</a></li>
+     <li><a href="#share" data-t="nShare">Share your story</a></li>
+     <li><a href="#mission" data-t="nMission">Our mission</a></li>
+     <li><a href="#faq" data-t="nFaq">Questions</a></li>
+     <li><a href="#about" data-t="nAbout">About me</a></li>
+     <li><a href="#contact" data-t="nContact">Contact</a></li>
+    </ul>
+   </div>
+   <button class="tbtn" id="langBtn" aria-label="Switch language / भाषा बदल्नुस्">नेपाली</button>
+   <button class="tbtn" id="themeBtn" aria-pressed="false"><span id="themeIco" aria-hidden="true">☾</span><span id="themeTxt" data-t="dark">Dark</span></button>
+   <button class="tbtn" id="smaller" aria-label="Smaller text">A−</button>
+   <button class="tbtn" id="larger" aria-label="Larger text">A+</button>
+   <button class="tbtn" id="calmBtn" aria-pressed="false" data-t="calm">Calm motion</button>
+  </div>
+ </div>
+ <div class="dhaka" aria-hidden="true"></div>
+</header>
+
+<main id="main">
+<section class="hero" id="home" aria-labelledby="h1">
+ <div class="scene" role="img" id="sceneImg" aria-label="">
+  <svg class="day" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" id="dayScene" aria-hidden="true"></svg>
+  <svg class="night" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" id="nightScene" aria-hidden="true"></svg>
+ </div>
+ <div class="dhaka" aria-hidden="true"></div>
+ <div class="wrap heroText">
+  <span class="kicker" data-t="kicker">A digital archive of Nepali storytelling</span>
+  <h1 id="h1" data-t="h1">Every village has a story. Tell yours.</h1>
+  <p class="sub" data-t="sub"></p>
+  <div class="row"><a class="btn" href="#share" data-t="cta1">Share a story</a><a class="btn ghost" href="#map" data-t="cta2">Explore the map</a></div>
+  <div class="stats"><div><b id="sCount">0</b><span data-t="sStories">stories</span></div><div><b id="sDist">0</b><span data-t="sDist">districts</span></div><div><b>77</b><span data-t="sOf">districts in Nepal</span></div></div>
+ </div>
+</section>
+
+<section class="mission" id="mission" aria-labelledby="mh">
+ <div class="wrap">
+  <span class="kicker" data-t="mKick">Our mission</span>
+  <h2 id="mh" data-t="mH">Stories that should not fade away</h2>
+  <p class="lead" data-t="mP"></p>
+  <div class="pillars">
+   <div class="pillar"><h3 data-t="p1h">Preserve</h3><p data-t="p1p"></p></div>
+   <div class="pillar"><h3 data-t="p2h">Place</h3><p data-t="p2p"></p></div>
+   <div class="pillar"><h3 data-t="p3h">Pass on</h3><p data-t="p3p"></p></div>
+  </div>
+ </div>
+</section>
+<div class="dhaka" aria-hidden="true"></div>
+
+<section id="map" aria-labelledby="maph">
+ <div class="wrap">
+  <span class="kicker" data-t="mapK">Story map</span>
+  <h2 id="maph" data-t="mapH">Stories on the map of Nepal</h2>
+  <p class="lead" data-t="mapP"></p>
+  <div class="filters" id="gfilters" role="group" aria-label="Genre filter"></div>
+  <div class="mapgrid">
+   <div>
+    <div class="mapbox"><svg id="mainMap" viewBox="0 0 1000 510" role="group" aria-label="Map of Nepal"></svg></div>
+    <div class="maplabel" id="mapLabel" aria-hidden="true">&nbsp;</div>
+    <p class="note" data-t="mapNote"></p>
+   </div>
+   <div>
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:.6rem"><h3 id="listH" data-t="listH">Stories</h3><button class="tbtn" id="clearDist" hidden data-t="showAll">Show all</button></div>
+    <div class="list" id="storyList" aria-live="polite"></div>
+   </div>
+  </div>
+ </div>
+</section>
+<div class="dhaka" aria-hidden="true"></div>
+
+<section id="share" aria-labelledby="sh">
+ <div class="wrap">
+  <span class="kicker" data-t="shK">Your turn</span>
+  <h2 id="sh" data-t="shH">Share your story</h2>
+  <p class="lead" data-t="shP"></p>
+  <form class="formwrap" id="form" novalidate>
+   <div class="steps" id="steps" aria-hidden="true"></div>
+   <!-- 1 place -->
+   <fieldset class="panel" id="p1" style="border:0;margin:0;min-width:0">
+    <legend class="disp" style="font-size:1.4rem;padding:0 1.4rem;margin-top:1.2rem" data-t="f1">Where is this story from?</legend>
+    <div class="two">
+     <div><label for="prov" data-t="lProv">Province</label><select id="prov"></select></div>
+     <div><label for="dist" data-t="lDist">District</label><select id="dist"></select></div>
+    </div>
+    <div><label for="place" data-t="lPlace">Municipality, ward or village</label><input type="text" id="place" autocomplete="off" data-tp="phPlace" placeholder="e.g. Pokhara-12, Lekhnath"></div>
+    <div class="picker"><p class="note" data-t="pickNote"></p><div class="mapbox"><svg id="pickMap" viewBox="0 0 1000 510" role="group" aria-label="Pick a district on the map"></svg></div><div class="maplabel" id="pickLabel"></div></div>
+   </fieldset>
+   <!-- 2 story -->
+   <fieldset class="panel" id="p2" hidden style="border:0;margin:0;min-width:0">
+    <legend class="disp" style="font-size:1.4rem;padding:0 1.4rem;margin-top:1.2rem" data-t="f2">Tell the story</legend>
+    <div><label for="title" data-t="lTitle">Title</label><input type="text" id="title" maxlength="90" autocomplete="off"></div>
+    <div><span class="lbl" id="gl" data-t="lGenre">What kind of story is it?</span><div class="genres" id="genres" role="radiogroup" aria-labelledby="gl"></div></div>
+    <div class="two">
+     <div><span class="lbl" data-t="lKind">Is it true?</span>
+      <label class="opt" style="margin-bottom:.4rem"><input type="radio" name="kind" value="true"><span><b data-t="kTrue">Real, it happened</b></span></label>
+      <label class="opt"><input type="radio" name="kind" value="fiction" checked><span><b data-t="kFic">Imagined or passed down as a tale</b></span></label></div>
+     <div><label for="slang" data-t="lLang">Language of the story</label><select id="slang"></select>
+      <label for="teller" style="margin-top:.8rem" data-t="lTeller">Who told it to you? (optional)</label><input type="text" id="teller" maxlength="60" data-tp="phTeller" placeholder="My grandmother, Dang"></div>
+    </div>
+    <div><div class="row" style="justify-content:space-between;align-items:center"><label for="body" data-t="lBody" style="margin:0">Write it as you heard it</label><button type="button" class="tbtn" id="idea" data-t="idea">Need an idea?</button></div>
+     <p class="note" id="ideaText" style="margin:.4rem 0" aria-live="polite"></p>
+     <textarea id="body"></textarea><div class="note"><span id="count">0</span> / 6000</div></div>
+   </fieldset>
+   <!-- 3 consent -->
+   <fieldset class="panel" id="p3" hidden style="border:0;margin:0;min-width:0">
+    <legend class="disp" style="font-size:1.4rem;padding:0 1.4rem;margin-top:1.2rem" data-t="f3">Your choices</legend>
+    <div><label for="aname" data-t="lName">Your name</label><input type="text" id="aname" maxlength="60" autocomplete="name"></div>
+    <div role="radiogroup" aria-labelledby="idl"><span class="lbl" id="idl" data-t="lIdent">How may we show your name?</span>
+     <label class="opt"><input type="radio" name="nm" value="full" checked><span><b data-t="nFull">Show my full name</b></span></label>
+     <label class="opt" style="margin-top:.4rem"><input type="radio" name="nm" value="first"><span><b data-t="nFirst">Show only my first name</b></span></label>
+     <label class="opt" style="margin-top:.4rem"><input type="radio" name="nm" value="anon"><span><b data-t="nAnon">Keep me anonymous</b></span></label></div>
+    <div role="radiogroup" aria-labelledby="ll"><span class="lbl" id="ll" data-t="lLic">Can others use your story in the future?</span>
+     <label class="opt"><input type="radio" name="lic" value="open" checked><span><b data-t="licOpen">Yes, anyone may retell and adapt it</b><span class="note" data-t="licOpenD">They must credit me (or say anonymous).</span></span></label>
+     <label class="opt" style="margin-top:.4rem"><input type="radio" name="lic" value="reserved"><span><b data-t="licRes">No, people may only read it here</b><span class="note" data-t="licResD">Nobody may copy or reuse it without asking me.</span></span></label></div>
+    <label class="opt"><input type="checkbox" id="c1"><span data-t="c1">This story is mine to share. I wrote it, or I heard it and the teller is fine with it.</span></label>
+    <label class="opt"><input type="checkbox" id="c2"><span data-t="c2">I agree that it will be published here with the name choice above.</span></label>
+   </fieldset>
+   <!-- 4 poster -->
+   <div class="panel" id="p4" hidden>
+    <h3 class="disp" style="font-size:1.4rem" data-t="f4">Your story is on its way</h3>
+    <div class="posterbox">
+     <canvas id="poster" width="1080" height="1350" role="img" aria-label="Poster for your story"></canvas>
+     <div style="display:grid;gap:.9rem">
+      <p id="doneMsg"></p>
+      <div class="row"><button type="button" class="btn" id="dl" data-t="dl">Download poster</button><button type="button" class="btn ghost" id="restyle" data-t="restyle">Another style</button></div>
+      <p class="note" id="dlNote"></p>
+      <div class="row"><a class="btn ghost" href="#map" id="seeMap" data-t="seeMap">See it on the map</a><button type="button" class="tbtn" id="another" data-t="another">Share another story</button></div>
+     </div>
+    </div>
+   </div>
+   <div class="err" id="err" role="alert" style="padding:0 1.4rem"></div>
+   <div class="nav" id="nav"><button type="button" class="btn ghost" id="back" data-t="back">Back</button><button type="button" class="btn" id="next" data-t="next">Next</button></div>
+  </form>
+ </div>
+</section>
+<div class="dhaka" aria-hidden="true"></div>
+
+<section id="faq" aria-labelledby="fh">
+ <div class="wrap" style="max-width:820px">
+  <span class="kicker" data-t="faqK">Questions</span>
+  <h2 id="fh" data-t="faqH" style="margin-bottom:1.5rem">Before you share</h2>
+  <div id="faqList"></div>
+ </div>
+</section>
+
+<section class="about" id="about" aria-labelledby="ah">
+ <div class="wrap">
+  <span class="kicker" data-t="aK">The person behind this</span>
+  <h2 id="ah">Sudip Chaudhary</h2>
+  <div class="owner">
+   <div class="avatar" aria-hidden="true">सु</div>
+   <div style="display:grid;gap:.6rem">
+    <p class="disp" style="font-size:1.35rem" data-t="aTag"></p>
+    <p data-t="aP"></p>
+    <p id="contact"><span data-t="phone">Phone</span>: <span class="phone" id="phoneTxt"></span> <button class="tbtn" id="copyPh" data-t="copy">Copy</button></p>
+   </div>
+  </div>
+ </div>
+</section>
+</main>
+<div class="dhaka" aria-hidden="true"></div>
+<footer><div class="wrap">
+ <p class="disp">मेरो Samaj को कथा</p>
+ <p data-t="fCreated">Created and owned by Sudip Chaudhary</p>
+ <p>© 2026 Sudip Chaudhary · <span data-t="fRights">All rights reserved.</span></p>
+ <p class="note" data-t="fNote">Each story belongs to its author and follows the licence they chose.</p>
+</div></footer>
+
+<div class="ov" id="ov" hidden>
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" id="modal">
+  <div class="row" style="justify-content:space-between;align-items:flex-start"><div><div id="mTags"></div><h2 id="mTitle" style="font-size:1.8rem;margin-top:.4rem"></h2><p class="meta" id="mMeta"></p></div><button class="tbtn" id="mClose" aria-label="Close">✕</button></div>
+  <div class="body" id="mBody" lang="ne"></div>
+  <p class="meta" id="mLic"></p>
+  <div class="row"><button class="btn" id="mListen" data-t="listen">Listen</button><button class="btn ghost" id="mPoster" data-t="mkPoster">Make a poster</button><span id="mOwner" class="row"></span></div>
+  <canvas id="poster2" width="1080" height="1350" hidden style="width:100%;max-width:420px;height:auto;border-radius:10px;border:2px solid var(--gold)" role="img" aria-label="Poster"></canvas>
+  <div class="row" id="mPosterRow" hidden><button class="btn" id="mDl" data-t="dl">Download poster</button></div>
+ </div>
+</div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script>
+(function(){
+'use strict';
+var CONTACT_PHONE = ''; // add Sudip's number here, e.g. '+977-98XXXXXXXX'
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+var ls={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ---------- text ---------- */
+var T={en:{
+skip:'Skip to content',logoSub:'मेरो समाजको कथा · My Society Story',menu:'Menu',nMap:'Story map',nShare:'Share your story',nMission:'Our mission',nFaq:'Questions',nAbout:'About me',nContact:'Contact',dark:'Dark',light:'Light',calm:'Calm motion',
+kicker:'A digital archive of Nepali storytelling',h1:'Every village has a story. Tell yours.',
+sub:'Mero Samaj ko Katha keeps the tales our mothers and grandmothers told us: ghost stories, folk tales, family memories and jokes. The next generation should still be able to hear them.',
+cta1:'Share a story',cta2:'Explore the map',sStories:'stories on the map',sDist:'districts with a story',sOf:'districts in Nepal',
+mKick:'Our mission',mH:'Stories that should not fade away',
+mP:'My mother and my grandmother used to tell me stories at night. Those voices are getting quieter, and the stories are disappearing with them. This is a place to write them down while there is still someone to ask.',
+p1h:'Preserve',p1p:'Write down what was only ever spoken: the bhoot of the old bridge, the fox in the folk tale, the song for Maghe Sankranti.',
+p2h:'Place',p2p:'Every story is pinned to its district, and to its municipality or village when you know it. The map shows where Nepal still remembers.',
+p3h:'Pass on',p3p:'You decide if others may retell your story. Stories you open to everyone become something your grandchildren can find.',
+mapK:'Story map',mapH:'Stories on the map of Nepal',mapP:'Gold glowing dots have stories. Tap one, or pick any district, to read what people from there have shared.',
+mapNote:'A simplified map of Nepal. Every small dot is one of the 77 districts.',listH:'Stories',showAll:'Show all',none:'No stories here yet. Be the first to share one from this place.',
+all:'All',
+shK:'Your turn',shH:'Share your story',shP:'Four short steps. Tell us where it comes from, write it the way you heard it, choose how your name and story may be used, then take home a poster made for it.',
+f1:'Where is this story from?',lProv:'Province',lDist:'District',lPlace:'Municipality, ward or village',phPlace:'e.g. Pokhara-12, Lekhnath',pickNote:'Or tap the map to choose a district.',
+f2:'Tell the story',lTitle:'Title',lGenre:'What kind of story is it?',lKind:'Is it true?',kTrue:'Real, it happened',kFic:'Imagined, or a tale passed down',lLang:'Language of the story',lTeller:'Who told it to you? (optional)',phTeller:'My grandmother, in Dang',lBody:'Write it as you heard it',idea:'Need an idea?',
+f3:'Your choices',lName:'Your name',lIdent:'How may we show your name?',nFull:'Show my full name',nFirst:'Show only my first name',nAnon:'Keep me anonymous',
+lLic:'Can others use your story in the future?',licOpen:'Yes, anyone may retell and adapt it',licOpenD:'They must credit me, or say anonymous.',licRes:'No, people may only read it here',licResD:'Nobody may copy or reuse it without asking me.',
+c1:'This story is mine to share. I wrote it, or I heard it and the teller is fine with it.',c2:'I agree that it will be published here with the name choice above.',
+f4:'Your story is on its way',dl:'Download poster',restyle:'Another style',seeMap:'See it on the map',another:'Share another story',back:'Back',next:'Next',publish:'Publish my story',
+faqK:'Questions',faqH:'Before you share',aK:'The person behind this',
+aTag:'A son of storytelling women, now a keeper of their stories.',
+aP:'I built this because the stories my mom and grandmother told me are slowly vanishing. If you have one like it, I would be glad to keep it with you.',
+phone:'Phone',copy:'Copy',fCreated:'Created and owned by Sudip Chaudhary',fRights:'All rights reserved.',fNote:'Each story belongs to its author and follows the licence they chose.',
+listen:'Listen',stop:'Stop',mkPoster:'Make a poster',approve:'Approve',unapprove:'Unapprove',del:'Delete',sample:'Sample',pending:'Waiting for approval',yours:'Yours',
+by:'By',anon:'Anonymous',toldBy:'Told by',licOpenS:'Anyone may retell this story with credit.',licResS:'Read only. Please ask the author before reusing it.',
+errPlace:'Choose a district first.',errTitle:'Give your story a title.',errGenre:'Pick a genre.',errBody:'Write at least 40 characters of the story.',errName:'Add your name, or choose to stay anonymous.',errC:'Please tick both boxes so we may publish your story.',
+doneDb:'Thank you. Your story is saved. It will appear on the map once Sudip has read and approved it.',doneLocal:'Thank you. Your story is saved on this device and shows on your map. Publishing for everyone is only possible while signed in to the page.',
+dlNote:'If the download is blocked, press and hold the poster to save the image.',copied:'Copied',phoneSoon:'+977-XXXXXXXXXX (add number)',mapStories:'stories',
+sceneAria:'People sharing stories under the stars at night, and at a chautari under a peepal tree by day.'
+},ne:{
+skip:'मुख्य भागमा जानुहोस्',logoSub:'मेरो समाजको कथा · My Society Story',menu:'मेनु',nMap:'कथाको नक्सा',nShare:'कथा पठाउनुस्',nMission:'हाम्रो उद्देश्य',nFaq:'प्रश्नोत्तर',nAbout:'मेरो परिचय',nContact:'सम्पर्क',dark:'अँध्यारो',light:'उज्यालो',calm:'शान्त गति',
+kicker:'नेपाली कथावाचनको डिजिटल अभिलेख',h1:'हरेक गाउँमा एउटा कथा छ। तपाईंको कथा सुनाउनुस्।',
+sub:'मेरो समाजको कथाले हाम्रा आमा र हजुरआमाले सुनाएका कथा जोगाउँछ: भूतका कथा, लोककथा, परिवारका सम्झना र हाँसोका किस्सा। आउने पुस्ताले पनि ती सुन्न पाओस्।',
+cta1:'कथा सुनाउनुस्',cta2:'नक्सा हेर्नुस्',sStories:'नक्सामा कथा',sDist:'कथा भएका जिल्ला',sOf:'नेपालका जिल्ला',
+mKick:'हाम्रो उद्देश्य',mH:'हराउन नदिनुपर्ने कथाहरू',
+mP:'म सानो हुँदा आमा र हजुरआमाले रातमा कथा सुनाउनुहुन्थ्यो। ती आवाज बिस्तारै मधुरो हुँदैछन्, र कथाहरू पनि सँगै हराउँदैछन्। सोध्न सकिने मान्छे भएकै बेला ती कथा लेखेर राख्ने ठाउँ यही हो।',
+p1h:'जोगाउने',p1p:'मुखैमुखमा चलेका कुरा लेखेर राखौं: पुरानो पुलको भूत, लोककथाको स्याल, माघे संक्रान्तिको गीत।',
+p2h:'ठाउँ',p2p:'हरेक कथा आफ्नो जिल्लामा, र थाहा भए नगरपालिका वा गाउँमा, टाँसिन्छ। नक्साले देखाउँछ नेपालले कहाँ-कहाँ सम्झिरहेको छ।',
+p3h:'अर्को पुस्तालाई',p3p:'अरूले तपाईंको कथा फेरि सुनाउन सक्छन् कि सक्दैनन् भन्ने तपाईं नै तय गर्नुहुन्छ। सबैका लागि खोलिएका कथा नातिनातिनाले पनि भेट्न सक्छन्।',
+mapK:'कथाको नक्सा',mapH:'नेपालको नक्सामा कथा',mapP:'सुनौलो टल्किएका थोप्लामा कथा छन्। कुनै थोप्लामा थिच्नुस्, वा कुनै पनि जिल्ला रोज्नुस्, र त्यहाँका मान्छेले बाँडेका कथा पढ्नुस्।',
+mapNote:'नेपालको सरल नक्सा। हरेक सानो थोप्लो ७७ जिल्लामध्ये एउटा हो।',listH:'कथाहरू',showAll:'सबै देखाउनुस्',none:'यहाँ अहिलेसम्म कथा छैन। यही ठाउँको पहिलो कथा तपाईं सुनाउनुस्।',
+all:'सबै',
+shK:'तपाईंको पालो',shH:'तपाईंको कथा सुनाउनुस्',shP:'चार छोटा चरण। कथा कहाँको हो भन्नुस्, सुनेजस्तै लेख्नुस्, नाम र कथा कसरी प्रयोग हुन सक्छ रोज्नुस्, अनि कथाकै लागि बनेको पोस्टर लैजानुस्।',
+f1:'यो कथा कहाँको हो?',lProv:'प्रदेश',lDist:'जिल्ला',lPlace:'नगरपालिका, वडा वा गाउँ',phPlace:'जस्तै: पोखरा-१२, लेखनाथ',pickNote:'वा नक्सामा थिचेर जिल्ला रोज्नुस्।',
+f2:'कथा सुनाउनुस्',lTitle:'शीर्षक',lGenre:'कस्तो किसिमको कथा हो?',lKind:'के यो साँचो हो?',kTrue:'साँचो, साँच्चै भएको',kFic:'काल्पनिक, वा परम्परादेखि सुनिँदै आएको',lLang:'कथाको भाषा',lTeller:'तपाईंलाई कसले सुनाउनुभयो? (ऐच्छिक)',phTeller:'हजुरआमा, दाङमा',lBody:'सुनेजस्तै लेख्नुस्',idea:'विचार चाहियो?',
+f3:'तपाईंका रोजाइ',lName:'तपाईंको नाम',lIdent:'तपाईंको नाम कसरी देखाऔं?',nFull:'पूरा नाम देखाउनुस्',nFirst:'पहिलो नाम मात्र देखाउनुस्',nAnon:'मेरो नाम नदेखाउनुस्',
+lLic:'भविष्यमा अरूले तपाईंको कथा प्रयोग गर्न सक्छन्?',licOpen:'सक्छन्, जसले पनि फेरि सुनाउन र रूपान्तरण गर्न सक्छन्',licOpenD:'मेरो नाम (वा अज्ञात) उल्लेख गर्नुपर्छ।',licRes:'सक्दैनन्, यहाँ पढ्न मात्र पाउने',licResD:'मलाई नसोधी कसैले प्रतिलिपि वा पुनःप्रयोग गर्न पाउँदैन।',
+c1:'यो कथा बाँड्ने अधिकार मसँग छ। मैले लेखेको हुँ, वा सुनेको हुँ र सुनाउने व्यक्तिको सहमति छ।',c2:'माथिको नाम-रोजाइअनुसार यो कथा यहाँ प्रकाशित हुन मेरो सहमति छ।',
+f4:'तपाईंको कथा पुग्यो',dl:'पोस्टर डाउनलोड',restyle:'अर्कै शैली',seeMap:'नक्सामा हेर्नुस्',another:'अर्को कथा पठाउनुस्',back:'पछाडि',next:'अर्को',publish:'मेरो कथा प्रकाशित गर्नुस्',
+faqK:'प्रश्नोत्तर',faqH:'कथा पठाउनुअघि',aK:'यो साइट बनाउने व्यक्ति',
+aTag:'कथा सुनाउने महिलाहरूको छोरा, अहिले ती कथाको रक्षक।',
+aP:'मेरी आमा र हजुरआमाले सुनाएका कथा बिस्तारै हराउँदै गएको देखेर मैले यो बनाएँ। तपाईंसँग पनि त्यस्तो कथा छ भने, सँगै जोगाउन पाउँदा खुसी लाग्छ।',
+phone:'फोन',copy:'कपी',fCreated:'सुदिप चौधरीद्वारा निर्मित र स्वामित्वमा',fRights:'सर्वाधिकार सुरक्षित।',fNote:'हरेक कथा त्यसका लेखकको हो र उनले रोजेको अनुमतिअनुसार चल्छ।',
+listen:'सुन्नुस्',stop:'रोक्नुस्',mkPoster:'पोस्टर बनाउनुस्',approve:'स्वीकृत',unapprove:'अस्वीकृत',del:'हटाउनुस्',sample:'नमुना',pending:'स्वीकृतिको प्रतीक्षामा',yours:'तपाईंको',
+by:'लेखक',anon:'अज्ञात',toldBy:'सुनाउने',licOpenS:'श्रेय दिएर जसले पनि यो कथा फेरि सुनाउन सक्छ।',licResS:'पढ्न मात्र। पुनःप्रयोग गर्नुअघि लेखकलाई सोध्नुहोस्।',
+errPlace:'पहिले जिल्ला रोज्नुस्।',errTitle:'कथालाई शीर्षक दिनुस्।',errGenre:'कथाको प्रकार रोज्नुस्।',errBody:'कथा कम्तीमा ४० अक्षर लेख्नुस्।',errName:'नाम लेख्नुस्, वा नाम नदेखाउने रोज्नुस्।',errC:'कथा प्रकाशित गर्न दुवै बाकसमा चिन्ह लगाउनुस्।',
+doneDb:'धन्यवाद। तपाईंको कथा सुरक्षित भयो। सुदिपले पढेर स्वीकृत गरेपछि यो नक्सामा देखिन्छ।',doneLocal:'धन्यवाद। तपाईंको कथा यो उपकरणमा सुरक्षित भयो र तपाईंको नक्सामा देखिन्छ। सबैका लागि प्रकाशन यो पृष्ठमा साइन इन भएको बेला मात्र सम्भव छ।',
+dlNote:'डाउनलोड रोकिएमा पोस्टरमा थिचिराखेर तस्बिर सेभ गर्नुस्।',copied:'कपी भयो',phoneSoon:'+९७७-XXXXXXXXXX (नम्बर थप्नुस्)',mapStories:'कथा',
+sceneAria:'रातमा ताराहरूमुनि र दिनमा पिपलको चौतारीमा कथा बाँडिरहेका मान्छे।'
+}};
+var GENRES=[
+ {id:'horror',en:'Horror',ne:'भूत कथा'},{id:'folk',en:'Folk tale',ne:'लोककथा'},{id:'family',en:'Family',ne:'पारिवारिक'},{id:'fun',en:'Funny',ne:'हाँसो'},
+ {id:'romance',en:'Love',ne:'माया'},{id:'mystery',en:'Mystery',ne:'रहस्य'},{id:'festival',en:'Festival',ne:'चाडपर्व'},{id:'journey',en:'Journey',ne:'यात्रा'}];
+var FAQ={en:[
+['Who can read my story?','Anyone who visits, once it has been approved. You choose how your name appears: full name, first name only, or anonymous.'],
+['Can other people reuse my story?','Only if you say so. If you choose "anyone may retell and adapt it", people can reuse it with credit. If not, it stays read-only. The choice is shown on every story.'],
+['Do I have to write in Nepali?','No. Write in Nepali, English or any language you heard it in: Tharu, Newar, Maithili, Tamang, Magar and more.'],
+['Can I share a story my grandmother told me?','Yes. Add who told it to you, and make sure they are happy for it to be shared.'],
+['Which place should I choose?','Choose the district the story belongs to. Add the municipality, ward or village if you know it. A story can belong to a place you no longer live in.'],
+['How do I remove my story?','Call or message Sudip on the number at the bottom of the page and it will be taken down.'],
+['What is the poster?','When you finish, the page draws a poster that matches your story: its genre, its place and its mood. Download it to share with family.']],
+ne:[
+['मेरो कथा कसले पढ्न सक्छ?','स्वीकृत भएपछि यो साइट चलाउने जोसुकैले। तपाईंको नाम पूरा, पहिलो नाम मात्र वा अज्ञात देखाउने भन्ने तपाईं नै रोज्नुहुन्छ।'],
+['अरूले मेरो कथा फेरि प्रयोग गर्न सक्छन्?','तपाईंले अनुमति दिए मात्र। "जसले पनि फेरि सुनाउन र रूपान्तरण गर्न सक्छन्" रोजे श्रेय दिएर प्रयोग गर्न सकिन्छ। नरोजे पढ्न मात्र पाइन्छ। हरेक कथामा यो रोजाइ देखिन्छ।'],
+['के नेपालीमै लेख्नुपर्छ?','पर्दैन। नेपाली, अंग्रेजी वा तपाईंले जुन भाषामा सुन्नुभएको हो त्यसैमा लेख्नुस्: थारू, नेवार, मैथिली, तामाङ, मगर आदि।'],
+['हजुरआमाले सुनाएको कथा पठाउन मिल्छ?','मिल्छ। कसले सुनाउनुभएको हो लेख्नुस्, र उहाँले बाँड्न मन्जुर गर्नुभएको छ भन्ने पक्का गर्नुस्।'],
+['कुन ठाउँ रोज्ने?','कथा जुन जिल्लाको हो त्यही रोज्नुस्। थाहा भए नगरपालिका, वडा वा गाउँ पनि लेख्नुस्। अहिले बस्दै नबसेको ठाउँको कथा पनि हुन सक्छ।'],
+['मेरो कथा कसरी हटाउने?','पृष्ठको तल दिइएको नम्बरमा सुदिपलाई फोन वा सन्देश गर्नुस्, कथा हटाइनेछ।'],
+['पोस्टर भनेको के हो?','कथा पठाइसकेपछि पृष्ठले तपाईंको कथाको प्रकार, ठाउँ र भावअनुसार पोस्टर बनाउँछ। परिवारसँग बाँड्न डाउनलोड गर्नुस्।']]};
+var IDEAS={en:['What did your grandmother say you must never do after dark?','Which tree, bridge or pond in your village has a story nobody forgot?','Tell the funniest thing that ever happened at a wedding, a fair or a festival.','What did your family eat, sing or cook on the night of a big festival?','Who in your village could talk to animals, or was said to?'],
+ne:['अँध्यारो परेपछि कहिल्यै नगर्नू भनेर हजुरआमाले के भन्नुहुन्थ्यो?','तपाईंको गाउँको कुन रूख, पुल वा पोखरीको कथा कसैले बिर्सेको छैन?','विवाह, मेला वा चाडमा भएको सबैभन्दा हाँसो उठाउने घटना सुनाउनुस्।','ठूलो चाडको रातमा तपाईंको परिवारले के खायो, गायो वा पकायो?','तपाईंको गाउँमा जनावरसँग कुरा गर्न सक्ने (वा सक्ने भनिएको) को थियो?']};
+var PROV={1:['Koshi','कोशी'],2:['Madhesh','मधेश'],3:['Bagmati','बागमती'],4:['Gandaki','गण्डकी'],5:['Lumbini','लुम्बिनी'],6:['Karnali','कर्णाली'],7:['Sudurpashchim','सुदूरपश्चिम']};
+var DSRC='Taplejung|ताप्लेजुङ|1|27.35|87.67;Panchthar|पाँचथर|1|27.13|87.80;Ilam|इलाम|1|26.91|87.93;Jhapa|झापा|1|26.64|87.89;Morang|मोरङ|1|26.65|87.45;Sunsari|सुनसरी|1|26.67|87.17;Dhankuta|धनकुटा|1|26.98|87.35;Terhathum|तेह्रथुम|1|27.12|87.55;Sankhuwasabha|संखुवासभा|1|27.37|87.2;Bhojpur|भोजपुर|1|27.17|87.05;Solukhumbu|सोलुखुम्बु|1|27.7|86.7;Okhaldhunga|ओखलढुंगा|1|27.32|86.5;Khotang|खोटाङ|1|27.02|86.85;Udayapur|उदयपुर|1|26.85|86.6;'+
+'Saptari|सप्तरी|2|26.65|86.75;Siraha|सिरहा|2|26.7|86.2;Dhanusha|धनुषा|2|26.8|85.95;Mahottari|महोत्तरी|2|26.85|85.8;Sarlahi|सर्लाही|2|26.95|85.55;Rautahat|रौतहट|2|27.0|85.3;Bara|बारा|2|27.05|85.0;Parsa|पर्सा|2|27.1|84.8;'+
+'Sindhuli|सिन्धुली|3|27.25|85.97;Ramechhap|रामेछाप|3|27.33|86.08;Dolakha|दोलखा|3|27.7|86.17;Sindhupalchok|सिन्धुपाल्चोक|3|27.95|85.7;Kavrepalanchok|काभ्रेपलाञ्चोक|3|27.55|85.55;Lalitpur|ललितपुर|3|27.62|85.32;Bhaktapur|भक्तपुर|3|27.7|85.43;Kathmandu|काठमाडौं|3|27.74|85.3;Nuwakot|नुवाकोट|3|27.9|85.17;Rasuwa|रसुवा|3|28.1|85.3;Dhading|धादिङ|3|27.9|84.9;Makwanpur|मकवानपुर|3|27.4|85.05;Chitwan|चितवन|3|27.55|84.4;'+
+'Gorkha|गोरखा|4|28.2|84.65;Lamjung|लमजुङ|4|28.2|84.35;Tanahun|तनहुँ|4|27.95|84.25;Syangja|स्याङ्जा|4|28.0|83.85;Kaski|कास्की|4|28.3|84.0;Manang|मनाङ|4|28.65|84.0;Mustang|मुस्ताङ|4|28.9|83.85;Myagdi|म्याग्दी|4|28.5|83.4;Parbat|पर्वत|4|28.25|83.7;Baglung|बागलुङ|4|28.3|83.55;Nawalpur|नवलपुर|4|27.65|84.1;'+
+'Parasi|परासी|5|27.5|83.65;Rupandehi|रुपन्देही|5|27.55|83.45;Kapilvastu|कपिलवस्तु|5|27.58|83.05;Palpa|पाल्पा|5|27.87|83.55;Arghakhanchi|अर्घाखाँची|5|27.95|83.1;Gulmi|गुल्मी|5|28.08|83.28;Dang|दाङ|5|28.0|82.3;Pyuthan|प्यूठान|5|28.1|82.85;Rolpa|रोल्पा|5|28.35|82.65;Eastern Rukum|पूर्वी रुकुम|5|28.62|82.62;Banke|बाँके|5|28.1|81.7;Bardiya|बर्दिया|5|28.35|81.4;'+
+'Western Rukum|पश्चिम रुकुम|6|28.6|82.35;Salyan|सल्यान|6|28.35|82.15;Surkhet|सुर्खेत|6|28.6|81.65;Dailekh|दैलेख|6|28.85|81.7;Jajarkot|जाजरकोट|6|28.7|82.2;Dolpa|डोल्पा|6|29.0|82.85;Humla|हुम्ला|6|29.9|81.8;Jumla|जुम्ला|6|29.27|82.18;Kalikot|कालिकोट|6|29.15|81.6;Mugu|मुगु|6|29.5|82.1;'+
+'Bajura|बाजुरा|7|29.4|81.4;Bajhang|बझाङ|7|29.55|81.2;Achham|अछाम|7|29.1|81.25;Doti|डोटी|7|29.25|80.95;Kailali|कैलाली|7|28.7|80.9;Kanchanpur|कञ्चनपुर|7|28.85|80.3;Dadeldhura|डडेल्धुरा|7|29.3|80.58;Baitadi|बैतडी|7|29.5|80.45;Darchula|दार्चुला|7|29.85|80.55';
+var D=DSRC.split(';').map(function(r,i){var a=r.split('|');return {i:i,en:a[0],ne:a[1],p:+a[2],lat:+a[3],lon:+a[4]}});
+var OUTLINE=[[80.06,29.75],[80.25,30.15],[80.55,30.45],[81.0,30.2],[81.4,30.3],[81.85,30.38],[82.2,30.1],[82.7,29.75],[83.1,29.5],[83.5,29.25],[83.95,29.3],[84.2,29.05],[84.5,28.75],[85.0,28.6],[85.15,28.3],[85.5,28.25],[85.9,28.15],[86.2,27.95],[86.6,28.05],[86.95,27.95],[87.3,27.85],[87.6,27.85],[88.0,27.9],[88.15,27.5],[88.1,26.9],[88.15,26.4],[87.6,26.38],[87.2,26.4],[86.7,26.45],[86.2,26.5],[85.7,26.55],[85.3,26.7],[84.9,26.85],[84.5,27.1],[84.2,27.38],[83.7,27.38],[83.2,27.38],[82.8,27.5],[82.4,27.75],[82.1,27.85],[81.7,27.9],[81.4,28.1],[81.1,28.3],[80.7,28.5],[80.4,28.62],[80.06,28.82],[80.15,29.2],[80.2,29.6]];
+function px(lon,lat){return [(lon-80)*120,(30.55-lat)*120]}
+
+/* ---------- sample stories (clearly marked) ---------- */
+var SAMPLES=[
+{id:'s_1',sample:1,title:'The Woman by the Bridge',genre:'horror',kind:'fiction',lang:'en',district:'Myagdi',place:'Beni',nameMode:'anon',author:'',teller:'An uncle, on a night bus',license:'open',createdAt:1,approved:true,
+body:'Everyone near Beni knew not to cross the old suspension bridge after the last bus. My uncle laughed at that, until a night he was late.\n\nHalfway across he saw a woman standing at the railing, facing the river, hair down to her waist. He said "Namaste didi, are you lost?" She did not turn. The bridge began to sway, though there was no wind.\n\nHe says he does not remember crossing. He only remembers that in the morning, his shoes were wet and his lantern was still lit.'},
+{id:'s_2',sample:1,title:'The Fox Who Borrowed a Drum',genre:'folk',kind:'fiction',lang:'en',district:'Jumla',place:'Chandannath',nameMode:'anon',author:'',teller:'Told in the hills of Jumla',license:'open',createdAt:2,approved:true,
+body:'A hungry fox once borrowed a drum from the village priest and promised to return it by the full moon. All winter he played it loudly outside the henhouses, and the hens, thinking it was a festival, came out to dance.\n\nWhen the moon came, the fox returned the drum, a little torn. "Why is it torn?" asked the priest. "It worked very hard," said the fox, and left with a full belly.'},
+{id:'s_3',sample:1,title:'हजुरआमाको ढिकी',genre:'family',kind:'true',lang:'ne',district:'Dang',place:'Tulsipur',nameMode:'anon',author:'',teller:'हजुरआमा',license:'open',createdAt:3,approved:true,
+body:'माघको बिहान हजुरआमा अँध्यारै उठेर ढिकीमा चामल कुट्नुहुन्थ्यो। धप धप आवाजले हामीलाई उठाउँथ्यो।\n\nचुल्होमा आगो बल्थ्यो, अनि हजुरआमा थारू भाषामा गीत गाउँदै ढिकी चलाउनुहुन्थ्यो। म आधा निन्द्रामै ओछ्यानबाट सुन्थें। त्यो आवाज अहिले पनि कानमा बज्छ।'},
+{id:'s_4',sample:1,title:'The Goat at the Wedding',genre:'fun',kind:'true',lang:'en',district:'Bhaktapur',place:'Suryabinayak',nameMode:'anon',author:'',teller:'My aunt, every wedding season',license:'open',createdAt:4,approved:true,
+body:'At my cousin\'s wedding, a goat walked straight into the procession and stood next to the groom as if it had been invited.\n\nNobody could move it. The band played louder, the goat leaned closer. In the photos, the goat is in the front row. My aunt says it was the only guest who ate everything and complained about nothing.'}];
+/* ---------- scenes ---------- */
+function person(x,y,col,o){o=o||{};var look=o.up?'rotate(-18 '+x+' '+(y-40)+')':'';
+ var s='<g>';
+ s+='<path d="M'+(x-20)+' '+y+' Q'+(x-17)+' '+(y-40)+' '+x+' '+(y-44)+' Q'+(x+17)+' '+(y-40)+' '+(x+20)+' '+y+'Z" fill="'+col+'"/>';
+ s+='<g transform="'+look+'"><circle cx="'+x+'" cy="'+(y-54)+'" r="11" fill="'+(o.skin||'#C98B5E')+'"/>';
+ if(o.topi) s+='<path d="M'+(x-11)+' '+(y-60)+' L'+(x-9)+' '+(y-72)+' L'+(x+11)+' '+(y-72)+' L'+(x+11)+' '+(y-60)+'Z" fill="'+o.topi+'"/><path d="M'+(x-11)+' '+(y-60)+' L'+(x+11)+' '+(y-60)+'" stroke="#E39B00" stroke-width="2"/>';
+ else if(o.bun) s+='<circle cx="'+x+'" cy="'+(y-68)+'" r="6" fill="#1b1008"/><path d="M'+(x-11)+' '+(y-56)+' Q'+x+' '+(y-70)+' '+(x+11)+' '+(y-56)+'Z" fill="#1b1008"/>';
+ else s+='<path d="M'+(x-11)+' '+(y-56)+' Q'+x+' '+(y-70)+' '+(x+11)+' '+(y-56)+'Z" fill="#1b1008"/>';
+ s+='</g>';
+ if(o.shawl) s+='<path d="M'+(x-18)+' '+(y-30)+' Q'+x+' '+(y-14)+' '+(x+18)+' '+(y-30)+' L'+(x+19)+' '+(y-22)+' Q'+x+' '+(y-6)+' '+(x-19)+' '+(y-22)+'Z" fill="'+o.shawl+'"/>';
+ return s+'</g>'}
+function buildDay(){
+ var s='<defs><linearGradient id="skyD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FD0F0"/><stop offset="1" stop-color="#FCE9B8"/></linearGradient></defs>';
+ s+='<rect width="800" height="400" fill="url(#skyD)"/>';
+ s+='<g class="rays"><circle cx="640" cy="90" r="38" fill="#FFD25A"/>';
+ for(var i=0;i<12;i++){var a=i*30*Math.PI/180;s+='<line x1="'+(640+Math.cos(a)*48)+'" y1="'+(90+Math.sin(a)*48)+'" x2="'+(640+Math.cos(a)*66)+'" y2="'+(90+Math.sin(a)*66)+'" stroke="#FFC233" stroke-width="5" stroke-linecap="round"/>'}
+ s+='</g>';
+ s+='<polygon points="0,230 60,170 100,200 170,120 230,190 300,140 360,210 440,110 520,200 590,150 660,205 740,135 800,190 800,260 0,260" fill="#DDEBF7"/><polygon points="170,120 190,142 170,138 155,146" fill="#fff"/><polygon points="440,110 462,140 440,134 418,144" fill="#fff"/><polygon points="740,135 760,160 740,154 722,162" fill="#fff"/>';
+ s+='<path d="M0 270 Q120 215 260 262 T520 255 T800 250 L800 400 L0 400Z" fill="#7DB36A"/><path d="M0 300 Q200 262 400 292 T800 285 L800 400 L0 400Z" fill="#5E9A52"/>';
+ s+='<g class="cloud"><ellipse cx="0" cy="60" rx="46" ry="14" fill="#fff" opacity=".9"/><ellipse cx="24" cy="50" rx="28" ry="14" fill="#fff" opacity=".9"/></g><g class="cloud" style="animation-delay:-35s;animation-duration:90s"><ellipse cx="0" cy="110" rx="40" ry="11" fill="#fff" opacity=".8"/><ellipse cx="20" cy="102" rx="24" ry="11" fill="#fff" opacity=".8"/></g>';
+ s+='<g class="bird" style="animation-delay:-8s"><path d="M0 150 q8 -9 16 0 q8 -9 16 0" fill="none" stroke="#2A1A12" stroke-width="2"/></g>';
+ s+='<line x1="40" y1="215" x2="400" y2="190" stroke="#6B5646" stroke-width="1.5"/>';
+ var fc=['#B4141E','#1C3F7A','#2F8F4E','#E39B00','#fff'];for(var f=0;f<12;f++){var fx=60+f*29,fy=215-(fx-40)*25/360;s+='<polygon points="'+fx+','+fy+' '+(fx+14)+','+fy+' '+(fx+7)+','+(fy+16)+'" fill="'+fc[f%5]+'"/>'}
+ s+='<rect x="38" y="205" width="5" height="115" fill="#6B4A2A"/>';
+ s+='<g class="tree"><path d="M385 330 Q392 280 388 240 Q384 215 372 200 M388 240 Q408 220 430 205 M392 275 Q420 262 445 250" stroke="#5A3A20" stroke-width="16" fill="none" stroke-linecap="round"/><path d="M394 330 L394 245" stroke="#5A3A20" stroke-width="22"/>';
+ [[400,150,70,'#3F8A3C'],[330,180,56,'#4E9A44'],[470,178,58,'#3A7C37'],[370,125,50,'#58A84C'],[440,125,50,'#4E9A44'],[400,205,48,'#3A7C37']].forEach(function(c){s+='<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="'+c[3]+'"/>'});
+ s+='</g>';
+ s+='<rect x="205" y="318" width="390" height="22" rx="3" fill="#9C9486"/><rect x="195" y="338" width="410" height="26" rx="3" fill="#847C70"/><path d="M205 329 H595 M300 318 V340 M440 318 V340 M250 338 V364 M360 338 V364 M500 338 V364" stroke="#6E675C" stroke-width="2"/>';
+ s+=person(262,320,'#B4141E',{topi:'#1C3F7A'})+person(322,320,'#2F6B8F',{bun:1,shawl:'#E39B00'})+person(400,320,'#E39B00',{topi:'#B4141E'})+person(478,320,'#7A3B8F',{bun:1,shawl:'#fff'})+person(538,320,'#2F8F4E',{topi:'#E39B00'});
+ s+='<g class="bubble" style="animation-delay:0s"><rect x="280" y="215" width="66" height="30" rx="14" fill="#fff"/><polygon points="304,244 312,244 306,254" fill="#fff"/><text x="313" y="236" font-size="16" text-anchor="middle" fill="#B4141E" font-family="Yatra One,serif">कथा…</text></g>';
+ s+='<g class="bubble" style="animation-delay:2.3s"><rect x="470" y="225" width="58" height="30" rx="14" fill="#fff"/><polygon points="490,254 498,254 496,264" fill="#fff"/><text x="499" y="246" font-size="15" text-anchor="middle" fill="#1C3F7A" font-family="Mukta,sans-serif">हा हा!</text></g>';
+ s+='<g class="bubble" style="animation-delay:4.6s"><rect x="340" y="250" width="50" height="28" rx="13" fill="#fff"/><polygon points="360,277 368,277 366,286" fill="#fff"/><text x="365" y="270" font-size="15" text-anchor="middle" fill="#2A1A12" font-family="Mukta,sans-serif">…</text></g>';
+ s+='<ellipse cx="400" cy="372" rx="520" ry="40" fill="#4C8745"/>';
+ return s}
+function buildNight(){
+ var s='<defs><linearGradient id="skyN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050921"/><stop offset="1" stop-color="#26357A"/></linearGradient><radialGradient id="moonG"><stop offset="0" stop-color="#FFF6D0" stop-opacity=".9"/><stop offset="1" stop-color="#FFF6D0" stop-opacity="0"/></radialGradient><radialGradient id="fireG"><stop offset="0" stop-color="#FFB347" stop-opacity=".8"/><stop offset="1" stop-color="#FFB347" stop-opacity="0"/></radialGradient></defs>';
+ s+='<rect width="800" height="400" fill="url(#skyN)"/>';
+ var seed=7;function r(){seed=(seed*9301+49297)%233280;return seed/233280}
+ for(var i=0;i<110;i++){var x=r()*800,y=r()*230,rad=.6+r()*1.6;s+='<circle class="star" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+rad.toFixed(1)+'" fill="#FFF6E0" style="animation-delay:'+(r()*4).toFixed(2)+'s;animation-duration:'+(2+r()*3).toFixed(1)+'s"/>'}
+ s+='<circle cx="620" cy="90" r="90" fill="url(#moonG)"/><circle cx="620" cy="90" r="36" fill="#FFF3C4"/><circle cx="609" cy="82" r="6" fill="#EBDDA0"/><circle cx="632" cy="102" r="8" fill="#EBDDA0"/><circle cx="627" cy="76" r="4" fill="#EBDDA0"/>';
+ s+='<g class="shooter"><line x1="300" y1="40" x2="340" y2="22" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g><g class="shooter" style="animation-delay:-4s;animation-duration:13s"><line x1="620" y1="170" x2="650" y2="152" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g>';
+ s+='<polygon points="0,260 70,190 120,225 200,140 270,220 340,170 420,235 500,130 580,215 650,165 720,225 800,175 800,300 0,300" fill="#141C4A"/><polygon points="200,140 218,162 200,158 184,166" fill="#9FB4F0"/><polygon points="500,130 520,158 500,152 480,162" fill="#9FB4F0"/>';
+ s+='<path d="M0 305 Q200 270 400 300 T800 292 L800 400 L0 400Z" fill="#0B1233"/><path d="M0 335 Q250 310 450 335 T800 325 L800 400 L0 400Z" fill="#070C26"/>';
+ s+='<circle cx="400" cy="320" r="120" fill="url(#fireG)"/>';
+ s+='<g class="flame"><path d="M400 336 C384 328 384 308 398 296 C398 306 404 306 406 300 C414 310 420 326 400 336Z" fill="#FF8A1F"/><path d="M400 334 C392 330 392 318 400 312 C404 320 408 326 400 334Z" fill="#FFD25A"/></g><path d="M382 340 L418 334 M382 334 L418 340" stroke="#4A2E18" stroke-width="5" stroke-linecap="round"/>';
+ [[0,0],[1.4,10],[2.6,-12],[3.5,6]].forEach(function(p){s+='<circle class="spark" cx="'+(400+p[1])+'" cy="300" r="2" fill="#FFB347" style="animation-delay:'+p[0]+'s"/>'});
+ var cols=['#B4141E','#2F6B8F','#E39B00','#7A3B8F','#2F8F4E'];
+ s+=person(250,338,cols[0],{topi:'#E39B00',up:1})+person(315,340,cols[1],{bun:1,shawl:'#fff',up:1})+person(490,340,cols[2],{topi:'#B4141E',up:1})+person(552,338,cols[3],{bun:1,shawl:'#E39B00',up:1})+person(440,356,cols[4],{skin:'#C98B5E',up:1});
+ var wds=[['कथा',330,0],['Katha',470,1.7],['भूत',405,3.2],['सपना',520,4.6],['लोककथा',280,6]];
+ wds.forEach(function(w){s+='<text class="spark" x="'+w[1]+'" y="290" font-size="17" fill="#FFE9A8" text-anchor="middle" font-family="Yatra One,serif" style="animation-delay:'+w[2]+'s;animation-duration:7s">'+w[0]+'</text>'});
+ return s}
+$('#dayScene').innerHTML=buildDay();$('#nightScene').innerHTML=buildNight();
+
+/* ---------- state ---------- */
+var lang=ls.get('msk_lang')==='ne'?'ne':'en';
+var theme=ls.get('msk_theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+var fs=+(ls.get('msk_fs')||100);
+var dbStories=[],db=null,isOwner=false,localStories=[],genreFilter='',distFilter=null,openStoryObj=null;
+try{localStories=JSON.parse(ls.get('msk_local')||'[]')}catch(e){localStories=[]}
+function t(k){return (T[lang]&&T[lang][k])||T.en[k]||k}
+function dn(d){return lang==='ne'?d.ne:d.en}
+function gname(id){var g=GENRES.filter(function(x){return x.id===id})[0];return g?(lang==='ne'?g.ne:g.en):id}
+function distByName(n){return D.filter(function(d){return d.en===n})[0]}
+function say(m){$('#live').textContent='';setTimeout(function(){$('#live').textContent=m},50)}
+var toastT;function toast(m){var e=$('#toast');e.textContent=m;e.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){e.hidden=true},2600)}
+function displayName(s){if(s.nameMode==='anon'||!s.author)return t('anon');return s.nameMode==='first'?String(s.author).split(/\s+/)[0]:s.author}
+function visible(){var all=SAMPLES.concat(dbStories);var ids={};dbStories.forEach(function(s){ids[s.id]=1});
+ localStories.forEach(function(s){if(!ids[s.id])all.push(Object.assign({_local:1},s))});
+ return all.filter(function(s){return s.sample||s.approved||isOwner||s._local})}
+
+/* ---------- apply language/theme ---------- */
+function applyLang(){
+ document.documentElement.lang=lang;
+ $$('[data-t]').forEach(function(e){var v=t(e.getAttribute('data-t'));if(v!==undefined)e.textContent=v});
+ $$('[data-tp]').forEach(function(e){e.placeholder=t(e.getAttribute('data-tp'))});
+ $('#langBtn').textContent=lang==='ne'?'English':'नेपाली';
+ $('#sceneImg').setAttribute('aria-label',t('sceneAria'));
+ $('#themeTxt').textContent=theme==='dark'?t('light'):t('dark');$('#themeIco').textContent=theme==='dark'?'☀':'☾';
+ $('#phoneTxt').textContent=CONTACT_PHONE||t('phoneSoon');$('#copyPh').hidden=!CONTACT_PHONE;
+ $('#faqList').innerHTML=FAQ[lang].map(function(q){return '<details><summary>'+esc(q[0])+'</summary><p>'+esc(q[1])+'</p></details>'}).join('');
+ buildFilters();buildGenres();buildSelects();drawMaps();renderList();buildSteps();showStep(step,true);
+}
+function applyTheme(){document.documentElement.setAttribute('data-theme',theme);$('#themeBtn').setAttribute('aria-pressed',theme==='dark');$('#themeTxt').textContent=theme==='dark'?t('light'):t('dark');$('#themeIco').textContent=theme==='dark'?'☀':'☾'}
+function applyFs(){document.documentElement.style.fontSize=fs+'%'}
+$('#langBtn').onclick=function(){lang=lang==='ne'?'en':'ne';ls.set('msk_lang',lang);applyLang();say(lang==='ne'?'भाषा नेपाली भयो':'Language set to English')};
+$('#themeBtn').onclick=function(){theme=theme==='dark'?'light':'dark';ls.set('msk_theme',theme);applyTheme();say(theme==='dark'?'Dark mode':'Light mode')};
+$('#smaller').onclick=function(){fs=Math.max(85,fs-10);ls.set('msk_fs',fs);applyFs()};
+$('#larger').onclick=function(){fs=Math.min(150,fs+10);ls.set('msk_fs',fs);applyFs()};
+$('#calmBtn').onclick=function(){var on=document.body.classList.toggle('calm');this.setAttribute('aria-pressed',on)};
+var menu=$('#menu');$('#menuBtn').onclick=function(){var o=menu.classList.toggle('open');this.setAttribute('aria-expanded',o)};
+menu.addEventListener('click',function(e){if(e.target.tagName==='A'){menu.classList.remove('open');$('#menuBtn').setAttribute('aria-expanded','false')}});
+document.addEventListener('click',function(e){if(!menu.contains(e.target)){menu.classList.remove('open')}});
+$('#copyPh').onclick=function(){try{navigator.clipboard.writeText(CONTACT_PHONE).then(function(){toast(t('copied'))},function(){})}catch(e){}};
+
+/* ---------- map ---------- */
+function drawMap(svg,o){
+ var pts=OUTLINE.map(function(p){return px(p[0],p[1]).map(function(v){return v.toFixed(1)}).join(',')}).join(' ');
+ var h='<polygon class="nepal" points="'+pts+'"/>';
+ var counts={};if(o.pins)visible().forEach(function(s){if(genreFilter&&s.genre!==genreFilter)return;counts[s.district]=(counts[s.district]||0)+1});
+ D.forEach(function(d){var p=px(d.lon,d.lat),sel=o.sel===d.en;
+  h+='<circle class="dd" tabindex="0" role="button" data-d="'+d.i+'" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(sel?8:4.5)+'" '+(sel?'style="fill:var(--red);opacity:1"':'')+' aria-label="'+esc(dn(d))+'"><title>'+esc(dn(d))+'</title></circle>'});
+ if(o.pins)D.forEach(function(d){var c=counts[d.en];if(!c)return;var p=px(d.lon,d.lat);
+  h+='<g class="pin" tabindex="0" role="button" data-d="'+d.i+'" aria-pressed="'+(distFilter===d.en)+'" aria-label="'+esc(dn(d)+': '+c+' '+t('mapStories'))+'"><circle class="halo" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="7"/><circle class="core" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="9"/><text x="'+p[0].toFixed(1)+'" y="'+(p[1]+4).toFixed(1)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1200" style="pointer-events:none">'+c+'</text></g>'});
+ svg.innerHTML=h;
+ var lab=$(o.label);
+ function act(e){var n=e.target.closest('[data-d]');if(!n)return null;return D[+n.getAttribute('data-d')]}
+ svg.onclick=function(e){var d=act(e);if(d)o.pick(d)};
+ svg.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){var d=act(e);if(d){e.preventDefault();o.pick(d)}}};
+ function hov(e){var d=act(e);if(lab)lab.textContent=d?dn(d)+' · '+(lang==='ne'?PROV[d.p][1]:PROV[d.p][0])+(counts[d.en]?' · '+counts[d.en]:''):' '}
+ svg.onmouseover=hov;svg.onfocusin=hov;svg.onmouseleave=function(){if(lab)lab.innerHTML='&nbsp;'};
+}
+function drawMaps(){
+ drawMap($('#mainMap'),{pins:true,label:'#mapLabel',pick:function(d){distFilter=(distFilter===d.en)?null:d.en;drawMaps();renderList();var l=$('#storyList');if(window.innerWidth<860)l.scrollIntoView({behavior:'smooth',block:'nearest'})}});
+ drawMap($('#pickMap'),{sel:$('#dist').value&&D[+$('#dist').value]?D[+$('#dist').value].en:'',label:'#pickLabel',pick:function(d){$('#prov').value=d.p;fillDist();$('#dist').value=d.i;drawMaps();say(dn(d))}});
+}
+function buildFilters(){
+ var h='<button class="chip" aria-pressed="'+(!genreFilter)+'" data-g="">'+esc(t('all'))+'</button>'+GENRES.map(function(g){return '<button class="chip" data-g="'+g.id+'" aria-pressed="'+(genreFilter===g.id)+'">'+esc(lang==='ne'?g.ne:g.en)+'</button>'}).join('');
+ $('#gfilters').innerHTML=h}
+$('#gfilters').onclick=function(e){var b=e.target.closest('[data-g]');if(!b)return;genreFilter=b.getAttribute('data-g');buildFilters();drawMaps();renderList()};
+$('#clearDist').onclick=function(){distFilter=null;drawMaps();renderList()};
+function renderList(){
+ var all=visible(),shown=all.filter(function(s){return (!genreFilter||s.genre===genreFilter)&&(!distFilter||s.district===distFilter)}).sort(function(a,b){return (b.createdAt||0)-(a.createdAt||0)});
+ var dset={};all.forEach(function(s){dset[s.district]=1});
+ $('#sCount').textContent=all.length;$('#sDist').textContent=Object.keys(dset).length;
+ $('#clearDist').hidden=!distFilter;
+ var dd=distFilter&&distByName(distFilter);$('#listH').textContent=dd?dn(dd):t('listH');
+ $('#storyList').innerHTML=shown.length?shown.map(function(s){var d=distByName(s.district);
+  return '<button class="card" data-id="'+esc(s.id)+'"><span>'+(s.sample?'<span class="tag sample">'+esc(t('sample'))+'</span>':'')+(s._local&&!s.approved&&!s.sample?'<span class="tag pend">'+esc(t('pending'))+'</span>':'')+'<span class="tag">'+esc(gname(s.genre))+'</span></span><h3>'+esc(s.title)+'</h3><span class="meta">'+esc((d?dn(d):s.district)+(s.place?', '+s.place:'')+' · '+displayName(s))+'</span></button>'}).join(''):'<p class="note">'+esc(t('none'))+'</p>';
+}
+$('#storyList').onclick=function(e){var c=e.target.closest('[data-id]');if(!c)return;var s=visible().filter(function(x){return x.id===c.getAttribute('data-id')})[0];if(s)openStory(s)};
+
+/* ---------- reader ---------- */
+var speaking=false,lastFocus=null;
+function stopSpeak(){try{speechSynthesis.cancel()}catch(e){}speaking=false;$('#mListen').textContent=t('listen')}
+function openStory(s){
+ openStoryObj=s;lastFocus=document.activeElement;var d=distByName(s.district);
+ $('#mTags').innerHTML=(s.sample?'<span class="tag sample">'+esc(t('sample'))+'</span>':'')+'<span class="tag">'+esc(gname(s.genre))+'</span><span class="tag sample">'+(s.kind==='true'?(lang==='ne'?'साँचो':'True story'):(lang==='ne'?'काल्पनिक':'Fiction'))+'</span>'+(!s.approved&&!s.sample?'<span class="tag pend">'+esc(t('pending'))+'</span>':'');
+ $('#mTitle').textContent=s.title;
+ $('#mMeta').textContent=(d?dn(d):s.district)+(s.place?', '+s.place:'')+' · '+t('by')+' '+displayName(s)+(s.teller?' · '+t('toldBy')+' '+s.teller:'');
+ $('#mBody').textContent=s.body;$('#mBody').lang=s.lang==='en'?'en':'ne';
+ $('#mLic').textContent=s.license==='open'?t('licOpenS'):t('licResS');
+ $('#poster2').hidden=true;$('#mPosterRow').hidden=true;stopSpeak();
+ var ow='';if(isOwner&&s._db){ow='<button class="tbtn" id="oApp">'+esc(s.approved?t('unapprove'):t('approve'))+'</button><button class="tbtn" id="oDel">'+esc(t('del'))+'</button>'}
+ $('#mOwner').innerHTML=ow;
+ if(ow){$('#oApp').onclick=function(){db.collection('stories').doc(s.id).update({approved:!s.approved}).then(closeStory)};$('#oDel').onclick=function(){if(this.dataset.s){db.collection('stories').doc(s.id).delete().then(closeStory)}else{this.dataset.s=1;this.textContent=t('del')+'?'}}}
+ $('#ov').hidden=false;document.body.style.overflow='hidden';$('#mClose').focus();
+}
+function closeStory(){$('#ov').hidden=true;document.body.style.overflow='';stopSpeak();if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+$('#mClose').onclick=closeStory;
+$('#ov').addEventListener('click',function(e){if(e.target===this)closeStory()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('#ov').hidden)closeStory();
+ if(e.key==='Tab'&&!$('#ov').hidden){var f=$$('button,[href]',$('#modal')).filter(function(x){return !x.hidden&&x.offsetParent});if(!f.length)return;var a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
+$('#mListen').onclick=function(){
+ if(!('speechSynthesis' in window)){toast(lang==='ne'?'यो ब्राउजरमा सुनाउने सुविधा छैन':'Read-aloud is not available in this browser');return}
+ if(speaking){stopSpeak();return}
+ var s=openStoryObj;var u=new SpeechSynthesisUtterance(s.title+'. '+s.body);u.lang=s.lang==='en'?'en-US':'ne-NP';u.rate=.9;
+ u.onend=u.onerror=function(){speaking=false;$('#mListen').textContent=t('listen')};
+ speechSynthesis.speak(u);speaking=true;this.textContent=t('stop')};
+$('#mPoster').onclick=function(){var c=$('#poster2');c.hidden=false;$('#mPosterRow').hidden=false;drawPoster(c,openStoryObj,0);c.scrollIntoView({behavior:'smooth',block:'nearest'})};
+$('#mDl').onclick=function(){savePoster($('#poster2'),openStoryObj)};
+/* ---------- form ---------- */
+var step=1,lastStory=null,variant=0;
+var STEPN={en:['Place','Story','Choices','Poster'],ne:['ठाउँ','कथा','रोजाइ','पोस्टर']};
+function buildSteps(){$('#steps').innerHTML=STEPN[lang].map(function(n,i){return '<div class="stp'+(i+1<=step?' on':'')+'"><span class="lamp">'+(i+1)+'</span>'+esc(n)+'</div>'}).join('')}
+function buildGenres(){var cur=($('input[name=genre]:checked')||{}).value;
+ $('#genres').innerHTML=GENRES.map(function(g){return '<label class="gopt"><input type="radio" name="genre" value="'+g.id+'"'+(cur===g.id?' checked':'')+'><span>'+esc(lang==='ne'?g.ne:g.en)+'<small>'+esc(lang==='ne'?g.en:g.ne)+'</small></span></label>'}).join('')}
+function fillDist(){var p=+$('#prov').value,cur=$('#dist').value;
+ $('#dist').innerHTML='<option value="">—</option>'+D.filter(function(d){return d.p===p}).map(function(d){return '<option value="'+d.i+'">'+esc(dn(d))+'</option>'}).join('');
+ if(cur&&D[+cur]&&D[+cur].p===p)$('#dist').value=cur}
+function buildSelects(){var pv=$('#prov').value||'4';
+ $('#prov').innerHTML=Object.keys(PROV).map(function(k){return '<option value="'+k+'">'+esc(lang==='ne'?PROV[k][1]:PROV[k][0])+'</option>'}).join('');$('#prov').value=pv;fillDist();
+ var sl=$('#slang').value||'ne';
+ $('#slang').innerHTML=[['ne','नेपाली Nepali'],['en','English'],['other',lang==='ne'?'अर्को भाषा (थारू, नेवार, मैथिली...)':'Another language (Tharu, Newar, Maithili…)']].map(function(o){return '<option value="'+o[0]+'">'+esc(o[1])+'</option>'}).join('');$('#slang').value=sl}
+$('#prov').onchange=function(){fillDist();drawMaps()};
+$('#dist').onchange=function(){drawMaps()};
+$('#body').oninput=function(){$('#count').textContent=this.value.length};
+var ideaI=-1;$('#idea').onclick=function(){ideaI=(ideaI+1)%IDEAS[lang].length;$('#ideaText').textContent=IDEAS[lang][ideaI]};
+function showStep(n,keep){step=n;
+ for(var i=1;i<=4;i++)$('#p'+i).hidden=(i!==n);
+ buildSteps();$('#err').textContent='';
+ $('#back').hidden=(n===1||n===4);$('#next').parentNode.hidden=(n===4);$('#next').textContent=n===3?t('publish'):t('next');
+ if(!keep){$('#form').scrollIntoView({behavior:'smooth',block:'start'})}}
+function val(n){var e='';
+ if(n===1&&!$('#dist').value)e=t('errPlace');
+ if(n===2){if(!$('#title').value.trim())e=t('errTitle');else if(!$('input[name=genre]:checked'))e=t('errGenre');else if($('#body').value.trim().length<40)e=t('errBody')}
+ if(n===3){var anon=$('input[name=nm]:checked').value==='anon';if(!anon&&!$('#aname').value.trim())e=t('errName');else if(!$('#c1').checked||!$('#c2').checked)e=t('errC')}
+ $('#err').textContent=e;if(e)say(e);return !e}
+$('#next').onclick=function(){if(!val(step))return;if(step<3)showStep(step+1);else submit()};
+$('#back').onclick=function(){if(step>1)showStep(step-1)};
+function uid(){return 'k'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function submit(){
+ var d=D[+$('#dist').value],nm=$('input[name=nm]:checked').value;
+ var s={id:uid(),title:$('#title').value.trim(),body:$('#body').value.trim().slice(0,6000),genre:$('input[name=genre]:checked').value,kind:$('input[name=kind]:checked').value,lang:$('#slang').value,
+  district:d.en,province:PROV[d.p][0],place:$('#place').value.trim(),lat:d.lat,lon:d.lon,teller:$('#teller').value.trim(),author:nm==='anon'?'':$('#aname').value.trim(),nameMode:nm,license:$('input[name=lic]:checked').value,
+  consent:true,approved:false,createdAt:Date.now()};
+ lastStory=s;variant=0;$('#next').disabled=true;
+ localStories.push(s);ls.set('msk_local',JSON.stringify(localStories));
+ var fin=function(saved){$('#next').disabled=false;$('#doneMsg').textContent=saved?t('doneDb'):t('doneLocal');$('#dlNote').textContent=t('dlNote');showStep(4);renderList();drawMaps();
+  drawPoster($('#poster'),s,0);say(saved?t('doneDb'):t('doneLocal'))};
+ if(db){db.collection('stories').doc(s.id).set(s).then(function(){fin(true)},function(){fin(false)})}else fin(false)}
+$('#restyle').onclick=function(){variant++;drawPoster($('#poster'),lastStory,variant)};
+$('#dl').onclick=function(){savePoster($('#poster'),lastStory)};
+$('#another').onclick=function(){$('#form').reset();$('#count').textContent='0';$('#ideaText').textContent='';buildSelects();drawMaps();showStep(1)};
+$('#seeMap').onclick=function(){distFilter=lastStory?lastStory.district:null;drawMaps();renderList()};
+$('#form').onsubmit=function(e){e.preventDefault()};
+
+/* ---------- poster ---------- */
+function hash(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+var PAL={horror:['#12050a','#5a0a14','#e8dccb'],folk:['#f2a900','#a3121c','#fff2cf'],family:['#ffb347','#7a2a12','#fff0c8'],fun:['#1fb5a8','#e0457b','#fff3a8'],romance:['#f7a1b8','#6b1e4d','#ffffff'],mystery:['#1a1f5c','#3b1a66','#bfc6ff'],festival:['#e63b2e','#4a0f5c','#ffd35a'],journey:['#6fb1e0','#1c3f7a','#ffffff']};
+function mount(c,W,base,col,amp,r,n){c.fillStyle=col;c.beginPath();c.moveTo(0,base+200);var x=0;c.lineTo(0,base);for(var i=0;i<n;i++){x+=W/n;c.lineTo(x-W/n/2,base-amp*(.5+r()*.8));c.lineTo(x,base-amp*.1*r())}c.lineTo(W,base+200);c.closePath();c.fill()}
+function stars(c,W,H,r,n,col){c.fillStyle=col;for(var i=0;i<n;i++){c.globalAlpha=.4+r()*.6;c.beginPath();c.arc(r()*W,r()*H,.8+r()*2.4,0,7);c.fill()}c.globalAlpha=1}
+function branch(c,x,y,len,ang,w,r){if(len<14)return;var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len;c.lineWidth=w;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke();branch(c,x2,y2,len*(.7+r()*.1),ang-.35-r()*.3,w*.7,r);branch(c,x2,y2,len*(.7+r()*.1),ang+.35+r()*.3,w*.7,r)}
+function glow(c,x,y,rad,col){var g=c.createRadialGradient(x,y,0,x,y,rad);g.addColorStop(0,col);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,rad,0,7);c.fill()}
+function flame(c,x,y,s,col){c.fillStyle=col;c.beginPath();c.moveTo(x,y);c.bezierCurveTo(x-16*s,y-10*s,x-14*s,y-34*s,x,y-52*s);c.bezierCurveTo(x+14*s,y-34*s,x+16*s,y-10*s,x,y);c.fill()}
+function petals(c,x,y,n,len,wid,col,rot){c.fillStyle=col;for(var i=0;i<n;i++){c.save();c.translate(x,y);c.rotate(rot+i*Math.PI*2/n);c.beginPath();c.ellipse(0,-len/2,wid,len/2,0,0,7);c.fill();c.restore()}}
+var MOTIF={
+ horror:function(c,W,H,r,p){glow(c,W*.7,330,360,'rgba(255,240,210,.35)');c.fillStyle='#efe5d2';c.beginPath();c.arc(W*.7,330,150,0,7);c.fill();c.strokeStyle='#050204';c.lineCap='round';branch(c,230,H*.62,150,-Math.PI/2,26,r);
+  mount(c,W,H*.64,'#06020a',90,r,7);c.fillStyle='rgba(255,255,255,.07)';for(var i=0;i<7;i++){c.beginPath();c.ellipse(r()*W,H*.5+r()*260,300,34,0,0,7);c.fill()}
+  c.fillStyle='#ff2a2a';[W*.6,W*.64].forEach(function(x){c.beginPath();c.ellipse(x,H*.5,10,5,0,0,7);c.fill()})},
+ folk:function(c,W,H,r,p){c.fillStyle='#ffd25a';c.beginPath();c.arc(W/2,470,190,0,7);c.fill();c.strokeStyle='#fff2cf';c.lineWidth=8;for(var i=0;i<24;i++){var a=i*Math.PI/12;c.beginPath();c.moveTo(W/2+Math.cos(a)*215,470+Math.sin(a)*215);c.lineTo(W/2+Math.cos(a)*270,470+Math.sin(a)*270);c.stroke()}
+  mount(c,W,H*.55,'rgba(110,20,30,.55)',230,r,6);mount(c,W,H*.6,'#5c0f1a',160,r,8);c.fillStyle='#2a0508';for(var h=0;h<7;h++){var x=60+h*150+r()*40,y=H*.62+r()*30;c.fillRect(x,y,70,50);c.beginPath();c.moveTo(x-10,y);c.lineTo(x+35,y-38);c.lineTo(x+80,y);c.fill();c.fillStyle='#ffd25a';c.fillRect(x+26,y+14,16,18);c.fillStyle='#2a0508'}},
+ family:function(c,W,H,r,p){stars(c,W,500,r,60,'#fff0c8');glow(c,W/2,640,480,'rgba(255,200,90,.45)');c.fillStyle='#2a0f08';c.fillRect(W/2-190,560,380,250);c.beginPath();c.moveTo(W/2-230,562);c.lineTo(W/2,400);c.lineTo(W/2+230,562);c.fill();
+  c.fillStyle='#ffd25a';c.fillRect(W/2-140,620,80,80);c.fillRect(W/2+60,620,80,80);c.fillStyle='#7a3a12';c.fillRect(W/2-30,690,60,120);flame(c,W/2,380,1.1,'#ffb347');c.fillStyle='#1a0904';c.fillRect(0,800,W,300);
+  c.fillStyle='#1a0904';[[180,790],[250,792],[W-240,792],[W-170,790]].forEach(function(q){c.beginPath();c.arc(q[0],q[1]-62,18,0,7);c.fill();c.beginPath();c.moveTo(q[0]-28,q[1]);c.quadraticCurveTo(q[0],q[1]-70,q[0]+28,q[1]);c.fill()})},
+ fun:function(c,W,H,r,p){for(var i=0;i<20;i++){c.fillStyle=i%2?'rgba(255,243,168,.28)':'rgba(255,255,255,.1)';c.beginPath();c.moveTo(W/2,520);var a=i*Math.PI/10;c.lineTo(W/2+Math.cos(a)*1500,520+Math.sin(a)*1500);c.lineTo(W/2+Math.cos(a+Math.PI/20)*1500,520+Math.sin(a+Math.PI/20)*1500);c.fill()}
+  var cols=['#fff3a8','#ffffff','#ff6b3d','#3b2fd1','#1fb5a8'];for(var j=0;j<70;j++){c.fillStyle=cols[j%5];c.save();c.translate(r()*W,r()*880);c.rotate(r()*6);var s=10+r()*26;if(j%3===0){c.beginPath();c.arc(0,0,s/1.6,0,7);c.fill()}else if(j%3===1)c.fillRect(-s/2,-s/4,s,s/2);else{c.beginPath();c.moveTo(0,-s/1.4);c.lineTo(s/1.4,s/1.4);c.lineTo(-s/1.4,s/1.4);c.fill()}c.restore()}
+  c.fillStyle='#fff3a8';c.beginPath();c.arc(W/2,500,170,0,7);c.fill();c.fillStyle='#2a1a12';c.beginPath();c.arc(W/2-60,460,16,0,7);c.arc(W/2+60,460,16,0,7);c.fill();c.strokeStyle='#2a1a12';c.lineWidth=14;c.lineCap='round';c.beginPath();c.arc(W/2,500,100,.15*Math.PI,.85*Math.PI);c.stroke()},
+ romance:function(c,W,H,r,p){stars(c,W,500,r,40,'#fff');glow(c,W/2,430,420,'rgba(255,255,255,.4)');c.fillStyle='#fff4f8';c.beginPath();c.arc(W/2,430,140,0,7);c.fill();
+  petals(c,W/2,760,12,260,60,'rgba(255,255,255,.45)',0);petals(c,W/2,760,10,210,52,'rgba(255,170,200,.8)',.3);petals(c,W/2,760,8,150,44,'rgba(255,110,160,.95)',.1);c.fillStyle='#ffd35a';c.beginPath();c.arc(W/2,760,36,0,7);c.fill();
+  c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=4;c.beginPath();c.moveTo(0,900);c.quadraticCurveTo(W/2,820,W,900);c.stroke()},
+ mystery:function(c,W,H,r,p){stars(c,W,700,r,140,'#dfe3ff');glow(c,W*.28,300,300,'rgba(191,198,255,.35)');c.fillStyle='#dfe3ff';c.beginPath();c.arc(W*.28,300,110,0,7);c.fill();c.fillStyle='#2a2680';c.beginPath();c.arc(W*.28+44,280,100,0,7);c.fill();
+  c.fillStyle='#0c0f33';c.beginPath();c.arc(W*.62,620,130,0,7);c.fill();c.beginPath();c.moveTo(W*.62-45,700);c.lineTo(W*.62-80,900);c.lineTo(W*.62+80,900);c.lineTo(W*.62+45,700);c.fill();c.strokeStyle='#bfc6ff';c.lineWidth=5;c.stroke();
+  c.fillStyle='rgba(255,255,255,.08)';for(var i=0;i<6;i++){c.beginPath();c.ellipse(r()*W,780+r()*200,320,40,0,0,7);c.fill()}},
+ festival:function(c,W,H,r,p){glow(c,W/2,500,520,'rgba(255,211,90,.4)');[420,340,260,190,120].forEach(function(l,i){petals(c,W/2,500,16-i*2,l,l*.12,['rgba(255,211,90,.9)','rgba(255,90,60,.9)','rgba(255,160,40,.95)','rgba(255,240,170,.95)','rgba(180,20,60,.95)'][i],i*.2)});c.fillStyle='#ffd35a';c.beginPath();c.arc(W/2,500,34,0,7);c.fill();
+  for(var d=0;d<7;d++){var x=100+d*147,y=930;c.fillStyle='#8a2a12';c.beginPath();c.ellipse(x,y,50,20,0,0,Math.PI);c.fill();flame(c,x,y-4,.9,'#ffd35a')}},
+ journey:function(c,W,H,r,p){c.fillStyle='#ffe9a8';c.beginPath();c.arc(W*.75,300,90,0,7);c.fill();mount(c,W,H*.5,'#dfeefb',380,r,5);mount(c,W,H*.58,'#7aa3d4',260,r,6);mount(c,W,H*.66,'#1c3f7a',170,r,8);
+  c.strokeStyle='#ffe9a8';c.lineWidth=18;c.lineCap='round';c.setLineDash([2,34]);c.beginPath();c.moveTo(W*.3,1000);c.bezierCurveTo(W*.7,900,W*.2,820,W*.55,720);c.stroke();c.setLineDash([])}
+};
+function wrap(c,txt,max,maxLines){var w=txt.split(/\s+/),lines=[],cur='';w.forEach(function(x){var t2=cur?cur+' '+x:x;if(c.measureText(t2).width>max&&cur){lines.push(cur);cur=x}else cur=t2});if(cur)lines.push(cur);
+ if(lines.length>maxLines){lines=lines.slice(0,maxLines);var l=lines[maxLines-1];while(c.measureText(l+'…').width>max&&l.length)l=l.slice(0,-1);lines[maxLines-1]=l+'…'}return lines}
+function drawPoster(cv,s,v){
+ var W=1080,H=1350;cv.width=W;cv.height=H;var c=cv.getContext('2d');var pal=PAL[s.genre]||PAL.mystery;
+ var go=function(){
+  var r=rng(hash(s.title+'|'+v+'|'+s.district));
+  var vv=v%2?[pal[1],pal[0]]:[pal[0],pal[1]];var g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,vv[0]);g.addColorStop(1,vv[1]);c.fillStyle=g;c.fillRect(0,0,W,H);
+  (MOTIF[s.genre]||MOTIF.mystery)(c,W,H,r,pal);
+  var o=c.createLinearGradient(0,H*.5,0,H);o.addColorStop(0,'rgba(8,4,16,0)');o.addColorStop(.35,'rgba(8,4,16,.72)');o.addColorStop(1,'rgba(8,4,16,.94)');c.fillStyle=o;c.fillRect(0,H*.5,W,H*.5);
+  for(var i=0;i<W/30;i++){c.fillStyle=i%2?'#b4141e':'#e39b00';c.beginPath();c.moveTo(i*30,0);c.lineTo(i*30+30,0);c.lineTo(i*30+15,26);c.fill()}
+  c.fillStyle='#1c3f7a';c.fillRect(0,0,W,6);
+  var gn=(GENRES.filter(function(x){return x.id===s.genre})[0]||{en:'',ne:''});var chip=(gn.en+' · '+gn.ne).toUpperCase();
+  c.font='700 30px Mukta, sans-serif';var cw=c.measureText(chip).width+44;c.fillStyle=pal[2];c.globalAlpha=.95;c.beginPath();c.roundRect?c.roundRect(52,58,cw,52,26):c.rect(52,58,cw,52);c.fill();c.globalAlpha=1;c.fillStyle='#14101e';c.textBaseline='middle';c.fillText(chip,74,85);
+  c.fillStyle='#fff';c.textBaseline='alphabetic';var fs=88;c.font='400 '+fs+'px "Yatra One", Mukta, serif';var tl=wrap(c,s.title,W-120,3);while(tl.length>2&&fs>60){fs-=6;c.font='400 '+fs+'px "Yatra One", Mukta, serif';tl=wrap(c,s.title,W-120,3)}
+  var y=H-470;c.fillStyle=pal[2];tl.forEach(function(l){c.fillText(l,60,y);y+=fs*1.18});
+  c.fillStyle='rgba(255,255,255,.88)';c.font='400 36px Mukta, sans-serif';y+=14;wrap(c,s.body.replace(/\s+/g,' ').slice(0,260),W-120,4).forEach(function(l){c.fillText(l,60,y);y+=52});
+  var d=distByName(s.district),place=(s.place?s.place+', ':'')+(lang==='ne'&&d?d.ne:s.district);
+  c.fillStyle=pal[2];c.font='700 34px Mukta, sans-serif';c.fillText(place+'  ·  '+displayName(s),60,H-120);
+  c.fillStyle='rgba(255,255,255,.2)';c.fillRect(60,H-96,W-120,2);
+  c.fillStyle='#fff';c.font='400 40px "Yatra One", Mukta, serif';c.fillText('मेरो Samaj को कथा',60,H-44);
+  c.textAlign='right';c.font='400 28px Mukta, sans-serif';c.fillStyle='rgba(255,255,255,.8)';c.fillText('Sudip Chaudhary',W-60,H-48);c.textAlign='left';
+ };
+ go();
+ try{Promise.all([document.fonts.load('400 60px "Yatra One"'),document.fonts.load('400 30px Mukta'),document.fonts.load('700 30px Mukta')]).then(go)}catch(e){}
+}
+function savePoster(cv,s){
+ var name='katha-poster-'+(s.title||'story').replace(/[^\wऀ-ॿ]+/g,'-').slice(0,30)+'.png';
+ cv.toBlob(function(b){
+  if(!b){toast('Could not create the image');return}
+  (window.claude&&claude.use?claude.use('downloads'):Promise.resolve(null)).then(function(dl){
+   if(dl&&dl.save)return dl.save({filename:name,data:b}).then(function(){toast(lang==='ne'?'पोस्टर सेभ भयो':'Poster saved')},function(e){if(!e||e.code!=='declined')toast(t('dlNote'))});
+   toast(t('dlNote'))}).catch(function(){toast(t('dlNote'))})},'image/png')}
+
+/* ---------- shared stories ---------- */
+(function(){
+ if(!(window.claude&&claude.use))return;
+ claude.use('user').then(function(u){if(u&&u.isOwner){isOwner=!!u.isOwner();renderList();drawMaps()}}).catch(function(){});
+ claude.use('db').then(function(x){if(!x)return;db=x;
+  db.collection('stories').onSnapshot(function(snap){dbStories=snap.docs.map(function(d){var o=d.data()||{};o.id=d.id;o._db=1;return o});renderList();drawMaps()},function(){})}).catch(function(){});
+})();
+
+/* ---------- start ---------- */
+applyTheme();applyFs();applyLang();
+})();
+</script>
+
+</body></html>
