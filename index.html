@@ -622,7 +622,7 @@ aP:"Sudip studies media and loves to preserve and archive his culture. He makes 
 aP3:"Sudip is from Simara Bhawanipur and studies Media Studies at KUSOA. He also works as a photographer, graphic designer, social media and advertising creator and content maker. His other work includes the documentary Gunjan, a film preserving the Holaiya festival, and My Society Gallery, a photography project on Tharu culture.",aP2:"The tales his mother and grandmother used to tell him are slowly vanishing. This project is his way of keeping them.",
 cPhone:"Phone",cMail:"Email",cIg1:"Project",cIg2:"Personal",cWeb:"Website",lPw:"Password",copy:"Copy",copied:"Copied",
 fCreated:"Created and owned by Sudip Chaudhary",fRights:"All rights reserved.",fNote:"Every story belongs to its author and follows the licence they chose.",
-listen:"Listen",stop:"Stop",mkPoster:"Make a poster",approve:"Approve",reject:"Reject",del:"Delete",confirmDel:"Tap again to delete",sample:"Sample",pending:"Awaiting approval",
+listen:"Listen",edit:"Edit",save:"Save",cancel:"Cancel",doneLive:"Your story is published and live on the map.",stop:"Stop",mkPoster:"Make a poster",approve:"Approve",reject:"Reject",del:"Delete",confirmDel:"Tap again to delete",sample:"Sample",pending:"Awaiting approval",
 by:"By",anon:"Anonymous",toldBy:"Told by",licOpenS:"Anyone may retell this story with credit.",licResS:"For reading only. Please ask the author before reusing it.",
 kindTrue:"True story",kindFic:"Fiction",wardW:"Ward",
 errPlace:"Choose a district first.",errTitle:"Give your story a title.",errGenre:"Pick a genre.",errBody:"Write at least 40 characters.",errName:"Add your name, or choose anonymous.",errC:"Tick both boxes to publish.",
@@ -657,7 +657,7 @@ aP:"सुदिप मिडिया अध्ययन गर्छन् र
 aP3:"सुदिप सिमरा भवानीपुरका हुन् र KUSOA मा मिडिया स्टडिज पढ्छन्। उनी फोटोग्राफर, ग्राफिक डिजाइनर, सोसल मिडिया र विज्ञापन निर्माता तथा कन्टेन्ट क्रिएटर पनि हुन्। गुञ्जन वृत्तचित्र, होलैया पर्व जोगाउने फिल्म र थारू संस्कृतिमा आधारित फोटो परियोजना My Society Gallery उनका अन्य काम हुन्।",aP2:"आमा र हजुरआमाले सुनाउने कथा बिस्तारै हराउँदै छन्। यो परियोजना ती कथा जोगाउने उनको प्रयास हो।",
 cPhone:"फोन",cMail:"इमेल",cIg1:"परियोजना",cIg2:"व्यक्तिगत",cWeb:"वेबसाइट",lPw:"पासवर्ड",copy:"कपी",copied:"कपी भयो",
 fCreated:"सुदिप चौधरीद्वारा निर्मित र स्वामित्वमा",fRights:"सर्वाधिकार सुरक्षित।",fNote:"हरेक कथा त्यसका लेखकको हो र उनले रोजेको अनुमति अनुसार चल्छ।",
-listen:"सुन्नुहोस्",stop:"रोक्नुहोस्",mkPoster:"पोस्टर बनाउनुहोस्",approve:"स्वीकृत गर्नुहोस्",reject:"अस्वीकार",del:"हटाउनुहोस्",confirmDel:"हटाउन फेरि थिच्नुहोस्",sample:"नमुना",pending:"स्वीकृतिको प्रतीक्षामा",
+listen:"सुन्नुहोस्",edit:"सम्पादन",save:"सुरक्षित गर्नुहोस्",cancel:"रद्द",doneLive:"तपाईंको कथा प्रकाशित भयो र नक्सामा देखिन्छ।",stop:"रोक्नुहोस्",mkPoster:"पोस्टर बनाउनुहोस्",approve:"स्वीकृत गर्नुहोस्",reject:"अस्वीकार",del:"हटाउनुहोस्",confirmDel:"हटाउन फेरि थिच्नुहोस्",sample:"नमुना",pending:"स्वीकृतिको प्रतीक्षामा",
 by:"लेखक",anon:"अज्ञात",toldBy:"सुनाउने",licOpenS:"श्रेय दिएर जसले पनि यो कथा फेरि सुनाउन सक्छ।",licResS:"पढ्न मात्र। पुनःप्रयोग गर्नुअघि लेखकलाई सोध्नुहोस्।",
 kindTrue:"साँचो कथा",kindFic:"काल्पनिक",wardW:"वडा",
 errPlace:"पहिले जिल्ला रोज्नुहोस्।",errTitle:"कथालाई शीर्षक दिनुहोस्।",errGenre:"कथाको प्रकार रोज्नुहोस्।",errBody:"कम्तीमा ४० अक्षर लेख्नुहोस्।",errName:"नाम लेख्नुहोस्, वा नाम नदेखाउने रोज्नुहोस्।",errC:"प्रकाशन गर्न दुवै बाकसमा चिन्ह लगाउनुहोस्।",
@@ -873,8 +873,9 @@ function renderList(){
  $('#clearDist').hidden=!distFilter;
  var dd=distFilter&&distByName(distFilter);$('#listH').textContent=dd?dn(dd):t('listH');
  $('#storyList').innerHTML=shown.length?shown.map(function(s){
-  return '<button class="card" data-id="'+esc(s.id)+'"><span>'+(s.sample?'<span class="tag sample">'+esc(t('sample'))+'</span>':'')+(s._local&&!s.sample&&!isPublished(s.id)?'<span class="tag pend">'+esc(t('pending'))+'</span>':'')+'<span class="tag">'+esc(gname(s.genre))+'</span></span><h3>'+esc(s.title)+'</h3><span class="meta">'+esc(placeStr(s)+' · '+displayName(s))+'</span></button>'}).join(''):'<p class="note">'+esc(t('none'))+'</p>';
+  return '<button class="card" data-id="'+esc(s.id)+'"><span>'+(s.sample?'<span class="tag sample">'+esc(t('sample'))+'</span>':'')+(pendTag(s)?'<span class="tag pend">'+esc(t('pending'))+'</span>':'')+'<span class="tag">'+esc(gname(s.genre))+'</span></span><h3>'+esc(s.title)+'</h3><span class="meta">'+esc(placeStr(s)+' · '+displayName(s))+'</span></button>'}).join(''):'<p class="note">'+esc(t('none'))+'</p>';
 }
+function pendTag(s){return !adminOn()&&!!db&&s._local&&s.sub&&!s.sample&&!s.published&&!isPublished(s.id)}
 function isPublished(id){return dbStories.some(function(s){return s.id===id})}
 $('#storyList').onclick=function(e){var c=e.target.closest('[data-id]');if(!c)return;var s=visible().filter(function(x){return x.id===c.getAttribute('data-id')})[0];if(s)openStory(s)};
 
@@ -882,19 +883,28 @@ $('#storyList').onclick=function(e){var c=e.target.closest('[data-id]');if(!c)re
 var lastFocus=null,bannerRun=0;
 function openStory(s,keep){
  openStoryObj=s;if(!keep)lastFocus=document.activeElement;
- $('#mTags').innerHTML=(s.sample?'<span class="tag sample">'+esc(t('sample'))+'</span>':'')+'<span class="tag">'+esc(gname(s.genre))+'</span><span class="tag sample">'+esc(s.kind==='true'?t('kindTrue'):t('kindFic'))+'</span>'+((s._pend||(s._local&&!s.sample&&!isPublished(s.id)))?'<span class="tag pend">'+esc(t('pending'))+'</span>':'');
+ $('#mTags').innerHTML=(s.sample?'<span class="tag sample">'+esc(t('sample'))+'</span>':'')+'<span class="tag">'+esc(gname(s.genre))+'</span><span class="tag sample">'+esc(s.kind==='true'?t('kindTrue'):t('kindFic'))+'</span>'+((s._pend||pendTag(s))?'<span class="tag pend">'+esc(t('pending'))+'</span>':'');
  $('#mTitle').textContent=s.title;
  $('#mMeta').textContent=placeStr(s)+' · '+t('by')+' '+displayName(s)+(s.teller?' · '+t('toldBy')+' '+s.teller:'');
  $('#mBody').textContent=s.body;$('#mBody').lang=DEV.test(s.body)?'ne':'en';
  $('#mLic').textContent=s.license==='open'?t('licOpenS'):t('licResS');
  $('#poster2').hidden=true;$('#mPosterRow').hidden=true;stopSpeak();
- var ow='';if(adminOn()&&(s._db||s._pend||s._legacy)){ow=((s._pend||s._legacy)?'<button class="tbtn" id="oApp">'+esc(t('approve'))+'</button><button class="tbtn" id="oDel">'+esc(t('reject'))+'</button>':'<button class="tbtn" id="oDel">'+esc(t('del'))+'</button>')}
+ var ow='';if(adminOn()&&(s._db||s._pend||s._legacy||(s._local&&!s.sample))){ow=((s._pend||s._legacy)?'<button class="tbtn" id="oApp">'+esc(t('approve'))+'</button><button class="tbtn" id="oDel">'+esc(t('reject'))+'</button>':'<button class="tbtn" id="oEdit">'+esc(t('edit'))+'</button><button class="tbtn" id="oDel">'+esc(t('del'))+'</button>')}
  $('#mOwner').innerHTML=ow;
- if(ow){if($('#oApp'))$('#oApp').onclick=function(){approve(s).then(closeStory,function(){})};$('#oDel').onclick=function(){delStory(this,s)}}
+ if(ow){if($('#oApp'))$('#oApp').onclick=function(){approve(s).then(closeStory,function(){})};$('#oDel').onclick=function(){delStory(this,s)};if($('#oEdit'))$('#oEdit').onclick=function(){editStory(s)}}
  $('#ov').hidden=false;document.body.style.overflow='hidden';$('#mClose').focus();startBanner(s.genre);
 }
+function editStory(s){
+ $('#mTitle').innerHTML='<input type="text" id="eT" maxlength="120" style="width:100%">';$('#eT').value=s.title;
+ $('#mBody').innerHTML='<textarea id="eB" rows="9" maxlength="6000" style="width:100%"></textarea>';$('#eB').value=s.body;
+ $('#mOwner').innerHTML='<button class="btn" id="eS">'+esc(t('save'))+'</button><button class="tbtn" id="eC">'+esc(t('cancel'))+'</button>';
+ $('#eC').onclick=function(){openStory(s,true)};
+ $('#eS').onclick=function(){var T=$('#eT').value.trim(),B=$('#eB').value.trim();if(!T||B.length<20){toast(t('errBody'));return}
+  if(s._local&&!s._db){localStories.forEach(function(x){if(x.id===s.id){x.title=T;x.body=B}});ls.set('msk_local',JSON.stringify(localStories));s.title=T;s.body=B;renderList();renderConsole();toast(t('conDone'));openStory(s,true);return}
+  if(!db){toast(t('conDbNo'));return}
+  db.collection('stories').doc(s.id).update({title:T,body:B}).then(function(){s.title=T;s.body=B;toast(t('conDone'));openStory(s,true)},function(e){toast(t('conDenied'))})}}
 function delStory(btn,s){if(!btn.dataset.s){btn.dataset.s=1;btn.textContent=t('confirmDel');return}
- if(!db){toast(t('conDbNo'));return}removeStory(s).then(closeStory,function(){toast(t('conDenied'))})}
+ if(!db&&!(s._local&&!s._db)){toast(t('conDbNo'));return}removeStory(s).then(closeStory,function(){toast(t('conDenied'))})}
 function closeStory(){$('#ov').hidden=true;$('#console').style.zIndex='';document.body.style.overflow=consoleOpen?'hidden':'';stopSpeak();bannerRun++;if(lastFocus&&lastFocus.focus)lastFocus.focus()}
 $('#mClose').onclick=closeStory;
 $('#ov').addEventListener('click',function(e){if(e.target===this)closeStory()});
@@ -1032,7 +1042,7 @@ function renderConsole(){var el=$('#console');
  h+='<div class="stat">'+srow(platformOwner,platformOwner?t('conOwner'):t('conOwnerNo'))+srow(!!db,db?t('conDb'):t('conDbNo'))+(subErr?srow(false,t('conSubErr')+' '+subErr):'')+(lastErr?'<div class="srow"><span class="dot no"></span><span class="cerr">'+esc(lastErr)+'</span></div>':'')+'</div>';
  h+='<p class="fine" style="margin-top:.6rem">'+esc(t('conNoteLocal'))+'</p>';
  h+='<div class="ctabs" role="tablist"><button class="tbtn" role="tab" data-ct="wait" aria-selected="'+(consoleTab==='wait')+'">'+esc(t('conWait'))+' ('+nd(A.wait.length,lang)+')</button><button class="tbtn" role="tab" data-ct="pub" aria-selected="'+(consoleTab==='pub')+'">'+esc(t('conPub'))+' ('+nd(A.pub.length,lang)+')</button></div>';
- h+=list.length?list.map(function(s){return '<div class="sc"><div><span class="tag">'+esc(gname(s.genre))+'</span><span class="tag sample">'+esc(s.kind==='true'?t('kindTrue'):t('kindFic'))+'</span></div><h3>'+esc(s.title)+'</h3><span class="meta">'+esc(placeStr(s)+' · '+displayName(s))+'</span><p class="pv">'+esc(String(s.body||'').slice(0,320))+(String(s.body||'').length>320?'…':'')+'</p><div class="row"><button class="tbtn" data-open="'+esc(s.id)+'">'+esc(t('conRead'))+'</button>'+(consoleTab==='wait'?'<button class="btn" data-ok="'+esc(s.id)+'">'+esc(t('approve'))+'</button><button class="tbtn" data-rm="'+esc(s.id)+'">'+esc(t('reject'))+'</button>':'<button class="tbtn" data-rm="'+esc(s.id)+'">'+esc(t('del'))+'</button>')+'</div></div>'}).join(''):'<p class="fine" style="margin-top:1rem">'+esc(t('conEmpty'))+'</p>';
+ h+=list.length?list.map(function(s){return '<div class="sc"><div><span class="tag">'+esc(gname(s.genre))+'</span><span class="tag sample">'+esc(s.kind==='true'?t('kindTrue'):t('kindFic'))+'</span></div><h3>'+esc(s.title)+'</h3><span class="meta">'+esc(placeStr(s)+' · '+displayName(s))+'</span><p class="pv">'+esc(String(s.body||'').slice(0,320))+(String(s.body||'').length>320?'…':'')+'</p><div class="row"><button class="tbtn" data-open="'+esc(s.id)+'">'+esc(t('conRead'))+'</button>'+(consoleTab==='wait'?'<button class="btn" data-ok="'+esc(s.id)+'">'+esc(t('approve'))+'</button><button class="tbtn" data-rm="'+esc(s.id)+'">'+esc(t('reject'))+'</button>':'<button class="tbtn" data-edit="'+esc(s.id)+'">'+esc(t('edit'))+'</button><button class="tbtn" data-rm="'+esc(s.id)+'">'+esc(t('del'))+'</button>')+'</div></div>'}).join(''):'<p class="fine" style="margin-top:1rem">'+esc(t('conEmpty'))+'</p>';
  if(consoleTab==='pub'&&hiddenIds.length)h+='<p class="fine" style="margin-top:1rem">'+hiddenIds.length+' sample(s) hidden. <button class="tbtn" data-unhide="1">Restore samples</button></p>';
  h+='</div>';el.hidden=false;var sc=el.scrollTop;el.innerHTML=h;el.scrollTop=sc;document.body.style.overflow='hidden'}
 $('#console').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
@@ -1041,8 +1051,9 @@ $('#console').addEventListener('click',function(e){var b=e.target.closest('butto
  if(b.id==='cExit'){consoleOpen=false;renderConsole();return}
  var id,ct=b.getAttribute('data-ct');if(ct){consoleTab=ct;renderConsole();return}
  if(id=b.getAttribute('data-open')){var s=find(id);if(s){$('#console').style.zIndex=60;openStory(s)}return}
+ if(id=b.getAttribute('data-edit')){var se=find(id);if(se){if(se.sample){toast('Sample stories are built in and cannot be edited. You can hide them.');return}$('#console').style.zIndex=60;openStory(se);editStory(se)}return}
  if(id=b.getAttribute('data-ok')){var s2=find(id);if(s2&&db)approve(s2).catch(function(){});else if(!db)toast(t('conDbNo'));return}
- if(id=b.getAttribute('data-rm')){var s3=find(id);if(!s3||!db){toast(t('conDbNo'));return}
+ if(id=b.getAttribute('data-rm')){var s3=find(id);if(!s3||(!db&&!(s3._local&&!s3._db))){toast(t('conDbNo'));return}
   if(!b.dataset.s){b.dataset.s=1;b.textContent=t('confirmDel');return}
   removeStory(s3).catch(function(){})}});
 
@@ -1086,8 +1097,8 @@ function submit(){
   consent:true,approved:false,createdAt:Date.now()};
  lastStory=s;variant=0;$('#next').disabled=true;
  localStories.push(s);ls.set('msk_local',JSON.stringify(localStories));
- var fin=function(saved){$('#next').disabled=false;$('#doneMsg').textContent=saved?t('doneDb'):t('doneLocal');$('#dlNote').textContent=t('dlNote');showStep(4);renderList();drawMaps();drawPoster($('#poster'),s,0);say($('#doneMsg').textContent)};
- if(db){var toSub=function(){return db.collection('submissions').doc(s.id).set(s)};var pubFirst=adminOn()&&platformOwner?db.collection('stories').doc(s.id).set(Object.assign({},s,{approved:true})).catch(toSub):toSub();pubFirst.then(function(){fin(true)},function(){fin(false)})}else fin(false)}
+ var fin=function(saved,live){if(live)s.published=true;else if(saved)s.sub=true;ls.set('msk_local',JSON.stringify(localStories));$('#next').disabled=false;$('#doneMsg').textContent=live?t('doneLive'):saved?t('doneDb'):t('doneLocal');$('#dlNote').textContent=t('dlNote');showStep(4);renderList();drawMaps();drawPoster($('#poster'),s,0);say($('#doneMsg').textContent)};
+ if(db){var live=false,toSub=function(){return db.collection('submissions').doc(s.id).set(s)};var pubFirst=adminOn()?db.collection('stories').doc(s.id).set(Object.assign({},s,{approved:true})).then(function(){live=true},toSub):toSub();pubFirst.then(function(){fin(true,live)},function(){fin(false)})}else fin(false)}
 $('#restyle').onclick=function(){variant++;drawPoster($('#poster'),lastStory,variant)};
 $('#dl').onclick=function(){savePoster($('#poster'),lastStory)};
 $('#another').onclick=function(){$('#form').reset();$('#count').textContent='0';$('#ideaText').textContent='';buildSelects();drawMaps();showStep(1)};
@@ -1233,11 +1244,13 @@ function drawPoster(cv,s,v){
 function t_(l,k){return (T[l]&&T[l][k])||T.en[k]}
 function savePoster(cv,s){
  var name='katha-poster-'+(s.title||'story').replace(/[^\wऀ-ॿ]+/g,'-').slice(0,30)+'.png';
+ function plain(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(u)},1500)}
  cv.toBlob(function(b){
   if(!b){toast(t('posterFail'));return}
-  (window.claude&&claude.use?claude.use('downloads'):Promise.resolve(null)).then(function(dl){
-   if(dl&&dl.save)return dl.save({filename:name,data:b}).then(function(){},function(e){if(!e||e.code!=='declined')toast(t('dlNote'))});
-   toast(t('dlNote'))}).catch(function(){toast(t('dlNote'))})},'image/png')}
+  var viaPlatform=(window.claude&&claude.use)?Promise.race([claude.use('downloads'),new Promise(function(r){setTimeout(function(){r(null)},1500)})]):Promise.resolve(null);
+  Promise.resolve(viaPlatform).catch(function(){return null}).then(function(dl){
+   if(dl&&dl.save)return dl.save({filename:name,data:b}).then(function(){},function(e){if(e&&e.code==='declined')return;plain(b)});
+   plain(b)}).catch(function(){try{plain(b)}catch(e){toast(t('dlNote'))}})},'image/png')}
 
 /* ---------- shared stories (platform database) ---------- */
 (function(){
