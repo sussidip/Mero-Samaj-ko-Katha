@@ -3996,6 +3996,9 @@ window.MSK_MUNIS = {"4-11":{"b":[389.0,383.9,52.0,60.4],"m":[{"m":0,"n":"Butwal"
   const CFG = window.MSK_CONFIG || {};
   const FB_VER = '10.12.2';
   const PUBLIC_FIELDS = ['title', 'text', 'html', 'font', 'sources', 'photos', 'cid', 'genre', 'kind', 'heard', 'era', 'language', 'loc', 'teller', 'reuse', 'featured', 'sample', 'createdAt', 'approvedAt'];
+  /* the fields the first version of the Firebase rules accepts (used if the rules have not been updated yet) */
+  const LEGACY_FIELDS = ['title', 'text', 'genre', 'kind', 'heard', 'era', 'language', 'loc', 'teller', 'showName', 'contact', 'reuse', 'consent', 'lang'];
+  const denied = e => /permission|insufficient/i.test(String((e && (e.code || e.message)) || ''));
   const RETURN_FIELDS = ['title', 'text', 'html', 'font', 'sources', 'genre', 'kind', 'heard', 'era', 'language', 'loc', 'reuse'];
   const photoDoc = (ph, i) => ({ n: i, data: String(ph.data || ''), caption: String(ph.caption || '').slice(0, 160), credit: String(ph.credit || '').slice(0, 80) });
 
@@ -4060,6 +4063,7 @@ window.MSK_MUNIS = {"4-11":{"b":[389.0,383.9,52.0,60.4],"m":[{"m":0,"n":"Butwal"
       async getPhotos(kind, idv) { return (load().photos[kind] || {})[idv] || []; },
       async deletePhoto(kind, idv, n) { const db = load(); const list = (db.photos[kind] || {})[idv]; if (!list) return; db.photos[kind][idv] = list.filter(x => x.n !== n); const coll = kind === 'stories' ? db.stories : db.submissions; if (coll[idv]) coll[idv].photos = db.photos[kind][idv].length; save(); },
       async getReturn(idv) { return load().returns[idv] || null; },
+      async checkRules() { return true; },
       watchStories(cb) { return watch(() => cb(sorted('stories', 'approvedAt'))); },
       watchPins(cb) { return watch(() => cb(sorted('pins', 'createdAt'))); },
       watchSettings(cb) { return watch(() => cb(load().settings.site || {})); },
@@ -4118,13 +4122,31 @@ window.MSK_MUNIS = {"4-11":{"b":[389.0,383.9,52.0,60.4],"m":[{"m":0,"n":"Butwal"
       async init() { await ready; },
       async submit(data, photos) {
         await ready;
-        const ref = F.doc(F.collection(db, 'submissions'));
-        const b = F.writeBatch(db);
-        b.set(ref, Object.assign({}, data, { photos: (photos || []).length, status: 'pending', createdAt: F.serverTimestamp() }));
-        b.set(F.doc(db, 'pins', ref.id), Object.assign(pinOf(data.loc), { createdAt: F.serverTimestamp() }));
-        (photos || []).forEach((ph, i) => b.set(F.doc(db, 'submissions', ref.id, 'photos', String(i)), photoDoc(ph, i)));
-        await b.commit();
-        return ref.id;
+        const send = async (doc, pics) => {
+          const ref = F.doc(F.collection(db, 'submissions'));
+          const b = F.writeBatch(db);
+          b.set(ref, Object.assign({}, doc, { status: 'pending', createdAt: F.serverTimestamp() }));
+          b.set(F.doc(db, 'pins', ref.id), Object.assign(pinOf(doc.loc), { createdAt: F.serverTimestamp() }));
+          pics.forEach((ph, i) => b.set(F.doc(db, 'submissions', ref.id, 'photos', String(i)), photoDoc(ph, i)));
+          await b.commit();
+          return ref.id;
+        };
+        try {
+          return await send(Object.assign({}, data, { photos: (photos || []).length }), photos || []);
+        } catch (e) {
+          if (!denied(e)) throw e;
+          /* The Firebase rules are still the first version, which does not know about formatting,
+             photos, sources or contributor codes. Send the story itself so nothing is lost. */
+          console.warn('Firestore rules are out of date — sending the story without photos and formatting. Publish firestore-rules.txt in Firebase.', e);
+          this.rulesOutdated = true;
+          return await send(pick(data, LEGACY_FIELDS), []);
+        }
+      },
+      /* true when the published Firebase rules are the current version */
+      async checkRules() {
+        await ready;
+        try { await F.getDocs(F.query(F.collection(db, 'returns'), F.limit(1))); return true; }
+        catch (e) { return !denied(e); }
       },
       async getPhotos(kind, idv) {
         await ready;
@@ -4160,7 +4182,7 @@ window.MSK_MUNIS = {"4-11":{"b":[389.0,383.9,52.0,60.4],"m":[{"m":0,"n":"Butwal"
       },
       async approve(idv, sub) {
         await ready;
-        const ph = await this.getPhotos('submissions', idv);
+        const ph = sub && sub.photos > 0 ? await this.getPhotos('submissions', idv).catch(() => []) : [];
         const b = F.writeBatch(db);
         b.set(F.doc(db, 'stories', idv), Object.assign(publicFrom(sub), { photos: ph.length, createdAt: sub.createdAt || F.serverTimestamp(), approvedAt: F.serverTimestamp() }));
         b.set(F.doc(db, 'private', idv), { teller: sub.teller || '', contact: sub.contact || '', showName: !!sub.showName });
@@ -4171,7 +4193,7 @@ window.MSK_MUNIS = {"4-11":{"b":[389.0,383.9,52.0,60.4],"m":[{"m":0,"n":"Butwal"
       },
       async reject(idv) {
         await ready;
-        const ph = await this.getPhotos('submissions', idv);
+        const ph = await this.getPhotos('submissions', idv).catch(() => []);
         const b = F.writeBatch(db);
         ph.forEach(x => b.delete(F.doc(db, 'submissions', idv, 'photos', String(x.n))));
         b.delete(F.doc(db, 'submissions', idv)); b.delete(F.doc(db, 'pins', idv));
@@ -4179,7 +4201,7 @@ window.MSK_MUNIS = {"4-11":{"b":[389.0,383.9,52.0,60.4],"m":[{"m":0,"n":"Butwal"
       },
       async sendBack(idv, sub, note) {
         await ready;
-        const ph = await this.getPhotos('submissions', idv);
+        const ph = sub && sub.photos > 0 ? await this.getPhotos('submissions', idv).catch(() => []) : [];
         const b = F.writeBatch(db);
         b.set(F.doc(db, 'returns', idv), Object.assign(pick(sub, RETURN_FIELDS), { note: String(note || '').slice(0, 1000), at: F.serverTimestamp() }));
         ph.forEach(x => b.delete(F.doc(db, 'submissions', idv, 'photos', String(x.n))));
@@ -4997,7 +5019,7 @@ window.MSK_MUNIS = {"4-11":{"b":[389.0,383.9,52.0,60.4],"m":[{"m":0,"n":"Butwal"
       $('#thanksCode').textContent = code; $('#thanksCodeBox').hidden = false;
       $('#thanks').hidden = false; $('#thanks').focus();
     } catch (e) {
-      console.error(e); $('#eConsent').textContent = t('sendFail');
+      console.error(e); $('#eConsent').textContent = t('sendFail') + (e && e.code ? ` (${e.code})` : '');
     }
     b.disabled = false; b.textContent = t('submit');
   }

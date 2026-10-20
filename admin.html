@@ -856,6 +856,8 @@ body.admin { background: var(--paper-lo); }
 .rev details .story-text { white-space: normal; }
 .edit-form .rte-bar { top: 0; }
 
+.rules-note { margin: 10px 0 14px; padding: 12px 16px; border-radius: 12px; border: 2px solid var(--bad); background: color-mix(in srgb, var(--bad) 8%, var(--paper-hi)); color: var(--ink); font-weight: 600; line-height: 1.55; }
+
 </style>
 <script>
   try { var t = localStorage.getItem('msk-theme'); if (t) document.documentElement.setAttribute('data-theme', t); var l = localStorage.getItem('msk-lang'); if (l) document.documentElement.lang = l; } catch (e) {}
@@ -933,6 +935,7 @@ body.admin { background: var(--paper-lo); }
       <button role="tab" type="button" id="tabSet" aria-controls="pSet" aria-selected="false"></button>
     </div>
     <div class="err" id="deskErr" role="alert"></div>
+    <div class="rules-note" id="rulesNote" role="alert" hidden></div>
 
     <div role="tabpanel" id="pWait" aria-labelledby="tabWait">
       <div class="queue" id="queue" aria-live="polite"></div>
@@ -2893,6 +2896,9 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
   const CFG = window.MSK_CONFIG || {};
   const FB_VER = '10.12.2';
   const PUBLIC_FIELDS = ['title', 'text', 'html', 'font', 'sources', 'photos', 'cid', 'genre', 'kind', 'heard', 'era', 'language', 'loc', 'teller', 'reuse', 'featured', 'sample', 'createdAt', 'approvedAt'];
+  /* the fields the first version of the Firebase rules accepts (used if the rules have not been updated yet) */
+  const LEGACY_FIELDS = ['title', 'text', 'genre', 'kind', 'heard', 'era', 'language', 'loc', 'teller', 'showName', 'contact', 'reuse', 'consent', 'lang'];
+  const denied = e => /permission|insufficient/i.test(String((e && (e.code || e.message)) || ''));
   const RETURN_FIELDS = ['title', 'text', 'html', 'font', 'sources', 'genre', 'kind', 'heard', 'era', 'language', 'loc', 'reuse'];
   const photoDoc = (ph, i) => ({ n: i, data: String(ph.data || ''), caption: String(ph.caption || '').slice(0, 160), credit: String(ph.credit || '').slice(0, 80) });
 
@@ -2957,6 +2963,7 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
       async getPhotos(kind, idv) { return (load().photos[kind] || {})[idv] || []; },
       async deletePhoto(kind, idv, n) { const db = load(); const list = (db.photos[kind] || {})[idv]; if (!list) return; db.photos[kind][idv] = list.filter(x => x.n !== n); const coll = kind === 'stories' ? db.stories : db.submissions; if (coll[idv]) coll[idv].photos = db.photos[kind][idv].length; save(); },
       async getReturn(idv) { return load().returns[idv] || null; },
+      async checkRules() { return true; },
       watchStories(cb) { return watch(() => cb(sorted('stories', 'approvedAt'))); },
       watchPins(cb) { return watch(() => cb(sorted('pins', 'createdAt'))); },
       watchSettings(cb) { return watch(() => cb(load().settings.site || {})); },
@@ -3015,13 +3022,31 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
       async init() { await ready; },
       async submit(data, photos) {
         await ready;
-        const ref = F.doc(F.collection(db, 'submissions'));
-        const b = F.writeBatch(db);
-        b.set(ref, Object.assign({}, data, { photos: (photos || []).length, status: 'pending', createdAt: F.serverTimestamp() }));
-        b.set(F.doc(db, 'pins', ref.id), Object.assign(pinOf(data.loc), { createdAt: F.serverTimestamp() }));
-        (photos || []).forEach((ph, i) => b.set(F.doc(db, 'submissions', ref.id, 'photos', String(i)), photoDoc(ph, i)));
-        await b.commit();
-        return ref.id;
+        const send = async (doc, pics) => {
+          const ref = F.doc(F.collection(db, 'submissions'));
+          const b = F.writeBatch(db);
+          b.set(ref, Object.assign({}, doc, { status: 'pending', createdAt: F.serverTimestamp() }));
+          b.set(F.doc(db, 'pins', ref.id), Object.assign(pinOf(doc.loc), { createdAt: F.serverTimestamp() }));
+          pics.forEach((ph, i) => b.set(F.doc(db, 'submissions', ref.id, 'photos', String(i)), photoDoc(ph, i)));
+          await b.commit();
+          return ref.id;
+        };
+        try {
+          return await send(Object.assign({}, data, { photos: (photos || []).length }), photos || []);
+        } catch (e) {
+          if (!denied(e)) throw e;
+          /* The Firebase rules are still the first version, which does not know about formatting,
+             photos, sources or contributor codes. Send the story itself so nothing is lost. */
+          console.warn('Firestore rules are out of date — sending the story without photos and formatting. Publish firestore-rules.txt in Firebase.', e);
+          this.rulesOutdated = true;
+          return await send(pick(data, LEGACY_FIELDS), []);
+        }
+      },
+      /* true when the published Firebase rules are the current version */
+      async checkRules() {
+        await ready;
+        try { await F.getDocs(F.query(F.collection(db, 'returns'), F.limit(1))); return true; }
+        catch (e) { return !denied(e); }
       },
       async getPhotos(kind, idv) {
         await ready;
@@ -3057,7 +3082,7 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
       },
       async approve(idv, sub) {
         await ready;
-        const ph = await this.getPhotos('submissions', idv);
+        const ph = sub && sub.photos > 0 ? await this.getPhotos('submissions', idv).catch(() => []) : [];
         const b = F.writeBatch(db);
         b.set(F.doc(db, 'stories', idv), Object.assign(publicFrom(sub), { photos: ph.length, createdAt: sub.createdAt || F.serverTimestamp(), approvedAt: F.serverTimestamp() }));
         b.set(F.doc(db, 'private', idv), { teller: sub.teller || '', contact: sub.contact || '', showName: !!sub.showName });
@@ -3068,7 +3093,7 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
       },
       async reject(idv) {
         await ready;
-        const ph = await this.getPhotos('submissions', idv);
+        const ph = await this.getPhotos('submissions', idv).catch(() => []);
         const b = F.writeBatch(db);
         ph.forEach(x => b.delete(F.doc(db, 'submissions', idv, 'photos', String(x.n))));
         b.delete(F.doc(db, 'submissions', idv)); b.delete(F.doc(db, 'pins', idv));
@@ -3076,7 +3101,7 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
       },
       async sendBack(idv, sub, note) {
         await ready;
-        const ph = await this.getPhotos('submissions', idv);
+        const ph = sub && sub.photos > 0 ? await this.getPhotos('submissions', idv).catch(() => []) : [];
         const b = F.writeBatch(db);
         b.set(F.doc(db, 'returns', idv), Object.assign(pick(sub, RETURN_FIELDS), { note: String(note || '').slice(0, 1000), at: F.serverTimestamp() }));
         ph.forEach(x => b.delete(F.doc(db, 'submissions', idv, 'photos', String(x.n))));
@@ -3157,6 +3182,7 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
       tPeople: 'Contributors', peopleHint: 'Writers are grouped by their private contributor code. Anyone with 5 or more published stories can receive a certificate — download it here and send it to them, or they can download it themselves from “My stories & certificate”.',
       noPeople: 'No published stories carry a contributor code yet. Codes are added to stories sent from now on.', storiesN: 'published stories', certBtn: 'Certificate', certFor: 'Name on the certificate', certMade: 'Certificate downloaded', unnamed: 'Name not shown publicly',
       sendBack: 'Send back for rewrite', sendBackQ: 'Note for the writer — what should they change?', sendBackPh: 'e.g. Please add where your grandmother heard this story and shorten the ending.', sendBackYes: 'Send back', sentBack: 'Sent back to the writer for rewriting', needNote: 'Please write a short note for the writer.',
+      rulesOld: 'Your Firebase rules are still the old version, so new stories arrive without photos, formatting, sources or contributor codes, and “Send back for rewrite” cannot work. Fix: Firebase console → Firestore Database → Rules → delete everything, paste the text of firestore-rules.txt, press Publish.',
       aiLbl: 'AI-likeness (estimate)', photosLbl: 'Photos', sourcesLbl: 'Sources & links', removePhoto: 'Remove this photo', photoRemoved: 'Photo removed', codeLbl: 'Contributor', fontLbl: 'Font'
     },
     ne: {
@@ -3185,6 +3211,7 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
       tPeople: 'योगदानकर्ता', peopleHint: 'लेखकहरू उनीहरूको निजी योगदानकर्ता कोडअनुसार समूहमा छन्। ५ वा बढी कथा प्रकाशित भएका जो कोहीले प्रमाणपत्र पाउन सक्छन् — यहाँबाट डाउनलोड गरेर पठाउनुहोस्, वा उनीहरू आफैँ “मेरा कथा र प्रमाणपत्र” बाट लिन सक्छन्।',
       noPeople: 'अहिलेसम्म कुनै प्रकाशित कथामा योगदानकर्ता कोड छैन। अबदेखि पठाइने कथामा कोड जोडिन्छ।', storiesN: 'प्रकाशित कथा', certBtn: 'प्रमाणपत्र', certFor: 'प्रमाणपत्रमा लेखिने नाम', certMade: 'प्रमाणपत्र डाउनलोड भयो', unnamed: 'नाम सार्वजनिक नगरिएको',
       sendBack: 'पुनर्लेखनका लागि फिर्ता', sendBackQ: 'लेखकका लागि टिप्पणी — के सच्याउनुपर्छ?', sendBackPh: 'जस्तै: हजुरआमाले यो कथा कहाँ सुन्नुभएको थियो थप्नुहोस् र अन्त्य छोटो बनाउनुहोस्।', sendBackYes: 'फिर्ता पठाउनुहोस्', sentBack: 'पुनर्लेखनका लागि लेखकलाई फिर्ता पठाइयो', needNote: 'लेखकका लागि छोटो टिप्पणी लेख्नुहोस्।',
+      rulesOld: 'तपाईंको Firebase rules अझै पुरानो छ, त्यसैले नयाँ कथा फोटो, ढाँचा, स्रोत र योगदानकर्ता कोडबिना आउँछन्, र “पुनर्लेखनका लागि फिर्ता” चल्दैन। समाधान: Firebase console → Firestore Database → Rules → सबै मेटाउनुहोस्, firestore-rules.txt को पाठ टाँस्नुहोस्, Publish थिच्नुहोस्।',
       aiLbl: 'एआई-जस्तो (अनुमान)', photosLbl: 'फोटो', sourcesLbl: 'स्रोत र लिङ्क', removePhoto: 'यो फोटो हटाउनुहोस्', photoRemoved: 'फोटो हटाइयो', codeLbl: 'योगदानकर्ता', fontLbl: 'अक्षर शैली'
     }
   };
@@ -3233,7 +3260,7 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
     const g = $('#pubGenre').value, so = $('#pubSort').value;
     $('#pubGenre').innerHTML = opt('', a('allGenres')) + MSK.GENRES.map(x => opt(x.id, MSK.nm(x), x.id === g)).join('');
     $('#pubSort').innerHTML = opt('new', a('newest'), so === 'new') + opt('old', a('oldest'), so === 'old') + opt('az', a('az'), so === 'az');
-    syncTheme(); renderTabs(); renderQueue(); renderPub(); renderSettings(); if (S.tab === 'people') renderPeople();
+    syncTheme(); renderTabs(); renderQueue(); renderPub(); renderSettings(); renderRulesNote(); if (S.tab === 'people') renderPeople();
     eEditor.relabel();
   }
   function syncTheme() { const n = isNight(); $('#themeBtn').innerHTML = `<svg><use href="#${n ? 'i-sun' : 'i-moon'}"/></svg>`; $('#themeBtn').setAttribute('aria-label', MSK.t(n ? 'themeLight' : 'themeDark')); }
@@ -3273,6 +3300,7 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
     S.unsubs.push(store.watchPrivate(m => { S.priv = m || {}; renderPub(); if (S.tab === 'people') renderPeople(); }));
     S.firstLoad = true;
     setTab(S.tab);
+    if (store.checkRules) store.checkRules().then(ok => { S.rulesOld = !ok; renderRulesNote(); }).catch(() => {});
   }
   /* A story that is already published is never shown as waiting again, and the desk opens on Published when nothing is waiting. */
   function syncPending() {
@@ -3281,6 +3309,8 @@ window.MSK_PLACES = [["Koshi","कोशी",[["Bhojpur","भोजपुर",[[
     renderTabs(); renderQueue();
     if (S.firstLoad && S.rawPending) { S.firstLoad = false; setTab(S.pending.length ? 'wait' : 'pub'); }
   }
+
+  function renderRulesNote() { const el = $('#rulesNote'); if (!el) return; el.hidden = !S.rulesOld; el.textContent = S.rulesOld ? a('rulesOld') : ''; }
 
   /* ---------- tabs ---------- */
   function renderTabs() {
